@@ -1,0 +1,26 @@
+<div class="well stats">
+	<table class="table">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Wins</th>
+				<th>Losses</th>
+				<th>Total</th>
+				<th>Winrate</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- TMPL_LOOP all-match-stats -->
+			<tr>
+				<td><strong><!-- TMPL_VAR name --></strong></td>
+				<td><!-- TMPL_VAR wins --></td>
+				<td><!-- TMPL_VAR losses --></td>
+				<td><!-- TMPL_VAR total --></td>
+				<td><span class="label <!-- TMPL_VAR class -->">
+					<!-- TMPL_VAR winrate -->%
+				</span></td>
+			</tr>
+			<!-- /TMPL_LOOP -->
+		</tbody>
+	</table>
+</div>

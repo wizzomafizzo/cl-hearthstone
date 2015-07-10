@@ -1,0 +1,30 @@
+<div class="well">
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Wins</th>
+				<th>Losses</th>
+				<th>Total</th>
+				<th>Winrate</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- TMPL_LOOP all-decks -->
+			<tr>
+				<td>
+					<a href="/?deck=<!-- TMPL_VAR name -->">
+						<!-- TMPL_VAR name -->
+					</a>
+				</td>
+				<td><!-- TMPL_VAR wins --></td>
+				<td><!-- TMPL_VAR losses --></td>
+				<td><!-- TMPL_VAR total --></td>
+				<td><span class="label <!-- TMPL_VAR class -->">
+					<!-- TMPL_VAR winrate -->%
+				</span></td>
+			</tr>
+			<!-- /TMPL_LOOP -->
+		</tbody>
+	</table>
+</div>

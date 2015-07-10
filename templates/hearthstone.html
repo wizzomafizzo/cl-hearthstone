@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Hearthstone</title>
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/static/css/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="/static/css/hearthstone.css" rel="stylesheet">
+	</head>
+	<body>
+		<!-- TMPL_INCLUDE "./templates/navbar.html" -->
+
+		<div class="container">
+			<div class="main">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="col-md-12">
+							<!-- TMPL_INCLUDE "./templates/input.html" -->
+						</div>
+
+						<!-- TMPL_IF filter-deck -->
+						<div class="col-md-12">
+							<div class="alert alert-info" role="alert">
+								Filtered by deck:
+								<strong><!-- TMPL_VAR filter-deck --></strong>
+								<a href="/" class="btn-xs btn-default"
+									id="filter_reset">Reset</a>
+							</div>
+						</div>
+						<!-- /TMPL_IF -->
+
+						<div class="col-md-12">
+							<!-- TMPL_INCLUDE "./templates/decks.html" -->
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="col-md-12">
+							<!-- TMPL_INCLUDE "./templates/matches.html" -->
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="col-md-12">
+							<!-- TMPL_INCLUDE "./templates/stats.html" -->
+						</div>
+
+						<div class="col-md-12">
+							<div class="well">
+								<canvas id="winrate-stats"></canvas>
+							</div>
+						</div>
+
+						<div class="col-md-12">
+							<div class="well">
+								<canvas id="hero-stats"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="/static/js/jquery.js"></script>
+		<script src="/static/js/bootstrap.min.js"></script>
+		<script src="/static/js/Chart.js"></script>
+		<!-- TMPL_INCLUDE "./templates/graphs.html" -->
+	</body>
+</html>

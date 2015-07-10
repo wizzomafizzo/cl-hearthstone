@@ -1,0 +1,81 @@
+<script>
+var winrate_labels = "<!-- TMPL_VAR daily-graph-labels -->";
+var winrate_data = {
+	labels: winrate_labels.split(","),
+	datasets: [
+		{
+			label: "Winrate",
+			fillColor: "rgba(0,0,220,0.2)",
+			strokeColor: "rgba(0,0,220,0.5)",
+			pointColor: "rgba(0,0,220,0.5)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(220,220,220,1)",
+			data: <!-- TMPL_VAR daily-graph-winrate -->
+		},
+		{
+			label: "Wins",
+			fillColor: "rgba(0,220,0,0.2)",
+			strokeColor: "rgba(0,220,0,0.5)",
+			pointColor: "rgba(0,220,0,0.5)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(220,220,220,1)",
+			data: <!-- TMPL_VAR daily-graph-wins -->
+		},
+		{
+			label: "Losses",
+			fillColor: "rgba(220,0,0,0.2)",
+			strokeColor: "rgba(220,0,0,0.5)",
+			pointColor: "rgba(220,0,0,0.5)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(220,220,220,1)",
+			data: <!-- TMPL_VAR daily-graph-losses -->
+		}
+	]
+};
+var winrate_ctx = document.getElementById("winrate-stats").getContext("2d");
+var winrate_stats = new Chart(winrate_ctx).Line(winrate_data, {
+	datasetFill : false
+});
+
+var hero_labels = "<!-- TMPL_VAR against-graph-labels -->";
+var hero_data = {
+	labels: hero_labels.split(","),
+	datasets: [
+		{
+			label: "Winrate",
+			fillColor: "rgba(0,0,220,0.2)",
+			strokeColor: "rgba(0,0,220,1)",
+			pointColor: "rgba(0,0,220,1)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(220,220,220,1)",
+			data: <!-- TMPL_VAR against-graph-winrate -->
+		},
+		{
+			label: "Wins",
+			fillColor: "rgba(0,220,0,0.2)",
+			strokeColor: "rgba(0,220,0,1)",
+			pointColor: "rgba(0,220,0,1)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(220,220,220,1)",
+			data: <!-- TMPL_VAR against-graph-wins -->
+		},
+		{
+			label: "Losses",
+			fillColor: "rgba(220,0,0,0.2)",
+			strokeColor: "rgba(220,0,0,1)",
+			pointColor: "rgba(220,0,0,1)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(220,220,220,1)",
+			data: <!-- TMPL_VAR against-graph-losses -->
+		}
+	]
+};
+var hero_ctx = document.getElementById("hero-stats").getContext("2d");
+var hero_winrate_stats = new Chart(hero_ctx).Bar(hero_data);
+</script>

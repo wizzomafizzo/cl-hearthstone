@@ -1,0 +1,62 @@
+.input-match {
+	text-align: center;
+	background: no-repeat 90% url("/static/hs-table.png");
+	background-position: center center;
+	padding: 10px;
+}
+
+.form-group {
+	margin-bottom: 0px;
+}
+
+.panel-title {
+	text-align: center;
+	font-size: 100%;
+}
+
+.outcome {
+	margin-top: 0.5em;
+	width: 100px;
+}
+
+.table {
+	margin-bottom: 5px;
+	text-align: left;
+}
+
+.stats {
+	text-align: center;
+}
+
+#filter_reset {
+	float: right;
+}
+
+.versus {
+	color: white;
+	font-size: 100%;
+	font-weight: bold;
+	width: 100%;
+	border-radius: 0.25em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+#hero-stats {
+	width: 100% !important;
+	height: 100% !important;
+}
+
+#winrate-stats {
+	width: 100% !important;
+	height: 100% !important;
+}
+
+.col-md-12, .col-md-4 {
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+.container {
+	width: 100%;
+}

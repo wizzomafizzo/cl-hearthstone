@@ -1,0 +1,42 @@
+<div class="well">
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Hero</th>
+				<th>Deck</th>
+				<th>Against</th>
+				<th>Outcome</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- TMPL_LOOP all-matches -->
+			<tr>
+				<td><!-- TMPL_VAR date --></td>
+				<td><!-- TMPL_VAR hero --></td>
+				<td>
+					<a href="/?deck=<!-- TMPL_VAR deck -->">
+						<!-- TMPL_VAR deck -->
+					</a>
+				</td>
+				<td><!-- TMPL_VAR against --></td>
+				<!-- TMPL_IF outcome -->
+				<td>
+					<span title="<!-- TMPL_VAR notes -->"
+						class="label label-success">
+						WIN<!-- TMPL_IF are-notes -->...<!-- /TMPL_IF -->
+					</span>
+				</td>
+				<!-- TMPL_ELSE -->
+				<td>
+					<span title="<!-- TMPL_VAR notes -->"
+						class="label label-danger">
+						LOSE<!-- TMPL_IF are-notes -->...<!-- /TMPL_IF -->
+					</span>
+				</td>
+				<!-- /TMPL_IF -->
+			</tr>
+			<!-- /TMPL_LOOP -->
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,35 @@
+<div class="well input-match">
+	<form method="POST"
+		action="/<!-- TMPL_IF filter-deck -->?deck=<!-- TMPL_VAR filter-deck --><!-- /TMPL_IF -->">
+		<div class="form-group">
+			<select class="form-control" name="hero">
+				<!-- TMPL_LOOP heroes -->
+				<option <!-- TMPL_VAR selected -->>
+					<!-- TMPL_VAR hero -->
+				</option>
+				<!-- /TMPL_LOOP -->
+			</select>
+			<input type="text"
+				class="form-control"
+				placeholder="Deck" name="deck"
+				value="<!-- TMPL_VAR last-deck -->">
+			<div class="versus label-default">VS</div>
+			<select class="form-control" name="against">
+				<!-- TMPL_LOOP heroes -->
+				<option><!-- TMPL_VAR hero --></option>
+				<!-- /TMPL_LOOP -->
+			</select>
+			<input type="text" class="form-control"
+				placeholder="Notes" name="notes"
+				autocomplete="off">
+			<div class="btn-group">
+				<button class="btn btn-danger outcome"
+					name="outcome"
+					value="lose">Lose</button>
+				<button class="btn btn-success outcome"
+					name="outcome"
+					value="win">Win</button>
+			</div>
+		</div>
+	</form>
+</div>
