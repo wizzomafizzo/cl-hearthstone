@@ -24,6 +24,10 @@
 	text-align: left;
 }
 
+.well {
+	padding: 10px;
+}
+
 .stats {
 	text-align: center;
 }
@@ -37,9 +41,6 @@
 	font-size: 100%;
 	font-weight: bold;
 	width: 100%;
-	border-radius: 0.25em;
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
 }
 
 #hero-stats {
@@ -59,4 +60,12 @@
 
 .container {
 	width: 100%;
+}
+
+table th {
+	text-align: center;
+}
+
+table td {
+	text-align: center;
 }

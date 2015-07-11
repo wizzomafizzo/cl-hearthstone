@@ -2,20 +2,25 @@
 	<table class="table table-condensed">
 		<thead>
 			<tr>
-				<th>Date</th>
-				<th>Hero</th>
-				<th>Deck</th>
-				<th>Against</th>
-				<th>Outcome</th>
+				<th><span class="glyphicon glyphicon-calendar"
+						title="Date"></span></th>
+				<!-- <th><span class="glyphicon glyphicon-user"></span></th> -->
+				<th><span class="glyphicon glyphicon-align-justify"
+						title="Deck"></span></th>
+				<th><span class="glyphicon glyphicon-screenshot"
+						title="Against"></span></th>
+				<th><span class="glyphicon glyphicon-flag"
+						title="Outcome"></span></th>
 			</tr>
 		</thead>
 		<tbody>
 			<!-- TMPL_LOOP all-matches -->
 			<tr>
 				<td><!-- TMPL_VAR date --></td>
-				<td><!-- TMPL_VAR hero --></td>
+				<!-- <td><!-- TMPL_VAR hero --></td> -->
 				<td>
-					<a href="/?deck=<!-- TMPL_VAR deck -->">
+					<a href="/?deck=<!-- TMPL_VAR deck -->"
+						title="<!-- TMPL_VAR hero -->">
 						<!-- TMPL_VAR deck -->
 					</a>
 				</td>
