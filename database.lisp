@@ -18,7 +18,12 @@
 (defun add-match (hero deck against notes outcome)
   (let ((q "insert into matches values (?, ?, ?, ?, ?, ?)")
 		(outcome (if outcome 1 0)))
-	(db-single q (now) hero deck against notes outcome)))
+	(db-single q (now) hero deck against notes outcome)
+	(sqlite:last-insert-rowid *db*)))
+
+(defun remove-match (id)
+  (let ((q "delete from matches where rowid = ?"))
+	(db-non-query q id)))
 
 (defun read-match (result)
   (let ((outcome (if (= (nth 6 result) 1) t nil)))

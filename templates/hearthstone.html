@@ -23,6 +23,17 @@
 							<!-- TMPL_INCLUDE "./templates/input.html" -->
 						</div>
 
+						<!-- TMPL_IF last-added -->
+						<div class="col-md-12">
+							<div class="alert alert-success" role="alert">
+								Added match:
+								<strong><!-- TMPL_VAR last-added --></strong>
+								<a href="/undo" class="btn-xs btn-default"
+									id="filter_reset">Undo</a>
+							</div>
+						</div>
+						<!-- /TMPL_IF -->
+
 						<!-- TMPL_IF filter-deck -->
 						<div class="col-md-12">
 							<div class="alert alert-info" role="alert">
