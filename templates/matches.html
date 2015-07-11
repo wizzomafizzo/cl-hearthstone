@@ -3,24 +3,27 @@
 		<thead>
 			<tr>
 				<th><span class="glyphicon glyphicon-calendar"
-						title="Date"></span></th>
+						title="Date" data-toggle="tooltip"></span></th>
 				<!-- <th><span class="glyphicon glyphicon-user"></span></th> -->
 				<th><span class="glyphicon glyphicon-align-justify"
-						title="Deck"></span></th>
+						title="Deck" data-toggle="tooltip"></span></th>
 				<th><span class="glyphicon glyphicon-screenshot"
-						title="Against"></span></th>
+						title="Against" data-toggle="tooltip"></span></th>
 				<th><span class="glyphicon glyphicon-flag"
-						title="Outcome"></span></th>
+						title="Outcome" data-toggle="tooltip"></span></th>
 			</tr>
 		</thead>
 		<tbody>
 			<!-- TMPL_LOOP all-matches -->
 			<tr>
-				<td><!-- TMPL_VAR date --></td>
-				<!-- <td><!-- TMPL_VAR hero --></td> -->
+				<td>
+					<span title="<!-- TMPL_VAR time -->" data-toggle="tooltip">
+						<!-- TMPL_VAR date -->
+					</span>
+				</td>
 				<td>
 					<a href="/?deck=<!-- TMPL_VAR deck -->"
-						title="<!-- TMPL_VAR hero -->">
+						title="<!-- TMPL_VAR hero -->" data-toggle="tooltip">
 						<!-- TMPL_VAR deck -->
 					</a>
 				</td>
@@ -28,14 +31,14 @@
 				<!-- TMPL_IF outcome -->
 				<td>
 					<span title="<!-- TMPL_VAR notes -->"
-						class="label label-success">
+						class="label label-success" data-toggle="tooltip">
 						WIN<!-- TMPL_IF are-notes -->...<!-- /TMPL_IF -->
 					</span>
 				</td>
 				<!-- TMPL_ELSE -->
 				<td>
 					<span title="<!-- TMPL_VAR notes -->"
-						class="label label-danger">
+						class="label label-danger" data-toggle="tooltip">
 						LOSE<!-- TMPL_IF are-notes -->...<!-- /TMPL_IF -->
 					</span>
 				</td>

@@ -36,6 +36,11 @@
   (let ((date (multiple-value-list (decode-universal-time x))))
 	(format nil "~d/~d" (nth 3 date) (nth 4 date))))
 
+(defun human-time (x)
+  (let ((date (multiple-value-list (decode-universal-time x))))
+	(format nil "~2,'0d:~2,'0d:~2,'0d"
+			(nth 2 date) (nth 1 date) (nth 0 date))))
+
 (defun winrate (wins total)
   (if (not (and (= wins 0) (= total 0)))
 	  (float (round-to (/ (* wins 100) total) 1))

@@ -13,9 +13,7 @@
 				class="form-control"
 				placeholder="Deck" name="deck"
 				value="<!-- TMPL_VAR last-deck -->">
-			<div class="versus">
-				VS
-			</div>
+			<div class="versus">VS</div>
 			<select class="form-control" name="against">
 				<!-- TMPL_LOOP heroes -->
 				<option><!-- TMPL_VAR hero --></option>
@@ -25,17 +23,15 @@
 				placeholder="Notes" name="notes"
 				autocomplete="off">
 			<div class="btn-group">
-				<button class="btn btn-success outcome"
-					name="outcome"
-					value="win"
-					title="Win">
-					<span class="glyphicon glyphicon-ok"></span>
-				</button>
 				<button class="btn btn-danger outcome"
 					name="outcome"
-					value="lose"
-					title="Lose">
-					<span class="glyphicon glyphicon-remove"></span>
+					value="lose">
+					Lose
+				</button>
+				<button class="btn btn-success outcome"
+					name="outcome"
+					value="win">
+					Win
 				</button>
 			</div>
 		</div>

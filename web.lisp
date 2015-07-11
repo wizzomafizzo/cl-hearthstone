@@ -29,6 +29,7 @@
 	(map 'list
 		 #'(lambda (x)
 			 (list :date (human-date (lk 'date x))
+				   :time (human-time (lk 'date x))
 				   :hero (lk 'hero x)
 				   :deck (lk 'deck x)
 				   :against (lk 'against x)

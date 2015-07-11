@@ -29,4 +29,4 @@
 (load "database.lisp")
 (load "web.lisp")
 
-;(defvar *web* (start-server))
+(defvar *web* (start-server))

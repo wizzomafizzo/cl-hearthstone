@@ -5,7 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport"
 			content="width=device-width, user-scalable=no, initial-scale=1" />
-		<title>Hearthstone</title>
+		<title>HS Tracker</title>
+		<link rel="shortcut icon" href="/static/favicon.png" type="image/x-icon">
+		<link rel="icon" href="/static/favicon.png" type="image/x-icon">
 		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
 		<link href="/static/css/bootstrap-theme.min.css" rel="stylesheet">
 		<link href="/static/css/hearthstone.css" rel="stylesheet">
@@ -68,5 +70,16 @@
 		<script src="/static/js/bootstrap.min.js"></script>
 		<script src="/static/js/Chart.js"></script>
 		<!-- TMPL_INCLUDE "./templates/graphs.html" -->
+		<script>
+		$(document).ready(function(){
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		$("body").keydown(function(){
+			if (event.keyCode == 13) {
+				document.activeElement.blur();
+				return false;
+			}
+		});
+		</script>
 	</body>
 </html>
