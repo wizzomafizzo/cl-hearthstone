@@ -10,7 +10,7 @@
   `(sqlite:execute-to-list *db* ,@body))
 
 (defun create-db ()
-  (db-non-query (str "create table matches "
+  (db-non-query (str "create table if not exists matches "
 					 "(date integer, hero text, "
 					 "deck text, against text, "
 					 "notes text, outcome integer)")))

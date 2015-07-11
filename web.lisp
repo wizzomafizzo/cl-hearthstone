@@ -2,10 +2,10 @@
 
 (defmacro with-http-authentication (&rest body)
   `(multiple-value-bind (username password) (hunchentoot:authorization)
-     (cond ((and (string= username (lk 'username *config*))
-				 (string= password (lk 'password *config*)))
+     (cond ((and (string= username (car *auth*))
+				 (string= password (cdr *auth*)))
             ,@body)
-           (t (hunchentoot:require-authorization "Hearthstone")))))
+           (t (hunchentoot:require-authorization "HS Tracker")))))
 
 (defun winrate->template (winrate)
   (cond ((< winrate (car (lk 'winrate-tiers *config*))) "label-danger")

@@ -5,8 +5,6 @@
 
 (defvar *config*
   '((db . "hearthstone.db")
-	(username . "user")
-	(password . "password")
 	(port . 8888)
 	(match-limit . 100)
 	(winrate-tiers . (50 60))
@@ -20,6 +18,7 @@
                "Warlock"
 			   "Warrior"))))
 
+(defvar *auth* (with-open-file (in "auth.conf") (read in)))
 (defvar *last-added* nil)
 
 (load "utils.lisp")
@@ -29,4 +28,5 @@
 (load "database.lisp")
 (load "web.lisp")
 
+(create-db)
 (defvar *web* (start-server))
