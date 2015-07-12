@@ -69,3 +69,10 @@ table th {
 table td {
 	text-align: center;
 }
+
+#to-top {
+	position: fixed;
+	right: 10px;
+	bottom: 0px;
+	font-size: 150%;
+}
