@@ -15,6 +15,10 @@
 					 "deck text, against text, "
 					 "notes text, outcome integer)")))
 
+(defun export-matches ()
+  (let ((r (db-to-list "select rowid,* from matches")))
+	(jsown:to-json r)))
+
 (defun add-match (hero deck against notes outcome)
   (let ((q "insert into matches values (?, ?, ?, ?, ?, ?)")
 		(outcome (if outcome 1 0)))
@@ -154,3 +158,6 @@
 
 (defun against-stats-week (&optional deck)
   (against-stats-range (- (now) (* 60 60 24 7)) (now) deck))
+
+(defun against-stats-season (&optional deck)
+  (against-stats-range (start-of-month) (now) deck))

@@ -1,7 +1,11 @@
 ;;;; web.lisp
 
+(alias gp hunchentoot:get-parameter)
+(alias pp hunchentoot:post-parameter)
+
 (defmacro with-http-authentication (&rest body)
-  `(multiple-value-bind (username password) (hunchentoot:authorization)
+  `(multiple-value-bind (username password)
+	   (hunchentoot:authorization)
      (cond ((and (string= username (car *auth*))
 				 (string= password (cdr *auth*)))
             ,@body)
@@ -56,65 +60,78 @@
 (defun daily-match-stats->template (&optional deck)
   (let ((stats (daily-match-stats-week deck)))
 	(list (cons 'labels
-				(format nil "~{~A~^,~}"
-						(map 'list #'(lambda (x) (human-date (lk 'date x)))
-							 stats)))
+				(format
+				 nil "~{~A~^,~}"
+				 (map 'list
+					  #'(lambda (x) (human-date (lk 'date x)))
+					  stats)))
 		  (cons 'wins
-				(jsown:to-json (map 'list #'(lambda (x) (lk 'wins x))
-									stats)))
+				(jsown:to-json
+				 (map 'list
+					  #'(lambda (x) (lk 'wins x))
+					  stats)))
 		  (cons 'losses
-				(jsown:to-json (map 'list #'(lambda (x) (lk 'losses x))
-									stats)))
+				(jsown:to-json
+				 (map 'list
+					  #'(lambda (x) (lk 'losses x))
+					  stats)))
 		  (cons 'winrate
-				(jsown:to-json (map 'list #'(lambda (x) (lk 'winrate x))
-									stats))))))
+				(jsown:to-json
+				 (map 'list
+					  #'(lambda (x) (lk 'winrate x))
+					  stats))))))
 
 (defun against-stats->template (&optional deck)
-  (let ((stats (against-stats-week deck)))
+  (let ((stats (against-stats-season deck)))
 	(list (cons 'labels
 				(format nil "~{~A~^,~}"
 						(map 'list #'(lambda (x) (car x))
 							 stats)))
 		  (cons 'wins
-				(jsown:to-json (map 'list #'(lambda (x) (lk 'wins (cdr x)))
-									stats)))
+				(jsown:to-json
+				 (map 'list #'(lambda (x) (lk 'wins (cdr x)))
+					  stats)))
 		  (cons 'losses
-				(jsown:to-json (map 'list #'(lambda (x) (lk 'losses (cdr x)))
-									stats)))
+				(jsown:to-json
+				 (map 'list #'(lambda (x) (lk 'losses (cdr x)))
+					  stats)))
 		  (cons 'winrate
-				(jsown:to-json (map 'list #'(lambda (x) (lk 'winrate (cdr x)))
-									stats))))))
+				(jsown:to-json
+				 (map 'list #'(lambda (x) (lk 'winrate (cdr x)))
+					  stats))))))
 
 (defun hero-select (selected)
-  (map 'list #'(lambda (x)
-				 (list :hero x
-					   :selected (if (equal selected x) "selected")))
+  (map 'list
+	   #'(lambda (x)
+		   (list :hero x
+				 :selected (if (equal selected x)
+							   "selected")))
 	   (lk 'heroes *config*)))
 
 (defun undo-submit ()
-  (remove-match *last-added*)
-  (hunchentoot:redirect "/"))
+  (with-http-authentication (remove-match *last-added*)
+	(hunchentoot:redirect "/")))
+
+(defun download-matches ()
+  (with-http-authentication (hunchentoot:no-cache)
+	(setf (hunchentoot:content-type*) "text/json")
+	(export-matches)))
 
 (defun index-page ()
-  (hunchentoot:no-cache)
-  (setq *last-added* nil)
-  (with-http-authentication
-	  (if (and (eq (hunchentoot:request-method hunchentoot:*request*) :POST)
-			   (hunchentoot:post-parameter "hero")
-			   (not (equal "" (hunchentoot:post-parameter "deck")))
-			   (hunchentoot:post-parameter "against")
-			   (hunchentoot:post-parameter "outcome"))
-		  (setq *last-added*
-				(add-match (hunchentoot:post-parameter "hero")
-						   (hunchentoot:post-parameter "deck")
-						   (hunchentoot:post-parameter "against")
-						   (hunchentoot:post-parameter "notes")
-						   (if (equal (hunchentoot:post-parameter "outcome")
-									  "win")
-							   t))))
-	(let* ((get-deck (hunchentoot:get-parameter "deck"))
-		   (post-deck (hunchentoot:post-parameter "deck"))
-		   (hero (hunchentoot:post-parameter "hero"))
+  (with-http-authentication (hunchentoot:no-cache)
+	(setq *last-added* nil)
+	(if (and (eq (hunchentoot:request-method hunchentoot:*request*) :POST)
+			 (pp "hero")
+			 (not (equal "" (pp "deck")))
+			 (pp "against")
+			 (pp "outcome"))
+		(setq *last-added*
+			  (add-match (pp "hero") (pp "deck")
+						 (pp "against") (pp "notes")
+						 (if (equal (pp "outcome") "win") t))))
+	(let* ((get-deck (gp "deck"))
+		   (post-deck (pp "deck"))
+		   (hero (pp "hero"))
 		   (daily-graph (daily-match-stats->template get-deck))
 		   (against-graph (against-stats->template get-deck))
 		   (vals (list :heroes (hero-select hero)
@@ -142,6 +159,8 @@
   (setq hunchentoot:*dispatch-table*
 		(list (hunchentoot:create-folder-dispatcher-and-handler
 			   "/static/" #p"static/")
+			  (hunchentoot:create-regex-dispatcher
+			   "^/export.json$" 'download-matches)
 			  (hunchentoot:create-regex-dispatcher
 			   "^/undo$" 'undo-submit)
 			  (hunchentoot:create-regex-dispatcher

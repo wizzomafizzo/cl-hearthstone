@@ -44,8 +44,7 @@
 								Filtered by deck:
 								<strong><!-- TMPL_VAR filter-deck --></strong>
 								<a href="/" class="btn-xs btn-default"
-									id="filter_reset"
-									title="Reset" data-toggle="tooltip">
+									id="filter_reset">
 									<span class="glyphicon glyphicon-refresh">
 									</span>
 								</a>
@@ -54,15 +53,15 @@
 						<!-- /TMPL_IF -->
 
 						<div class="col-md-12">
+							<!-- TMPL_INCLUDE "./templates/stats.html" -->
+						</div>
+
+						<div class="col-md-12">
 							<!-- TMPL_INCLUDE "./templates/decks.html" -->
 						</div>
 					</div>
 
 					<div class="col-md-4">
-						<div class="col-md-12">
-							<!-- TMPL_INCLUDE "./templates/stats.html" -->
-						</div>
-
 						<div class="col-md-12">
 							<div class="well">
 								<canvas title="Daily Stats - Week"
@@ -73,7 +72,7 @@
 
 						<div class="col-md-12">
 							<div class="well">
-								<canvas title="Hero Against Stats - Week"
+								<canvas title="Against Stats - Season"
 									data-toggle="tooltip"
 									id="hero-stats"></canvas>
 							</div>

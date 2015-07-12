@@ -9,6 +9,10 @@
       (read-sequence data stream)
       data)))
 
+(defmacro alias (new-name prev-name)
+  `(defmacro ,new-name (&rest args)
+     `(,',prev-name ,@args)))
+
 (defun now ()
   (get-universal-time))
 
