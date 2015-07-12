@@ -162,7 +162,7 @@
 				   (cons (car x)
 						 (cdr (assoc 'winrate (cdr x)))))
 			   stats)
-		  #'> :key #'cdr)))
+		  #'< :key #'cdr)))
 
 (defun seen-against-range (from to &optional deck)
   (let ((stats (against-stats-range from to deck)))
