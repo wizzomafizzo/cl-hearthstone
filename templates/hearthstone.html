@@ -29,7 +29,11 @@
 								Added match:
 								<strong><!-- TMPL_VAR last-added --></strong>
 								<a href="/undo" class="btn-xs btn-default"
-									id="filter_reset">Undo</a>
+									id="filter_reset"
+									title="Undo" data-toggle="tooltip">
+									<span class="glyphicon glyphicon-floppy-remove">
+									</span>
+								</a>
 							</div>
 						</div>
 						<!-- /TMPL_IF -->
@@ -40,7 +44,11 @@
 								Filtered by deck:
 								<strong><!-- TMPL_VAR filter-deck --></strong>
 								<a href="/" class="btn-xs btn-default"
-									id="filter_reset">Reset</a>
+									id="filter_reset"
+									title="Reset" data-toggle="tooltip">
+									<span class="glyphicon glyphicon-refresh">
+									</span>
+								</a>
 							</div>
 						</div>
 						<!-- /TMPL_IF -->
@@ -82,7 +90,9 @@
 		</div>
 
 		<span id="to-top">
-			<a href="#"><span class="glyphicon glyphicon-arrow-up"></span></a>
+			<a href="#">
+				<span class="glyphicon glyphicon-menu-up"></span>
+			</a>
 		</span>
 
 		<script src="/static/js/jquery.js"></script>

@@ -73,6 +73,6 @@ table td {
 #to-top {
 	position: fixed;
 	right: 10px;
-	bottom: 0px;
-	font-size: 150%;
+	bottom: -5px;
+	font-size: 200%;
 }
