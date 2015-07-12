@@ -48,23 +48,21 @@
 
 (defun deck-names ()
   (map 'list #'(lambda (x) (car x))
-	   (db-to-list (str "select distinct deck from"
-						" matches order by deck desc"))))
+	   (db-to-list "select distinct deck from matches order by deck desc")))
 
 (defun all-decks ()
-  (map 'list
-	   #'(lambda (x)
-		   (let ((wins (length (db-to-list (str "select * from matches where"
-												" deck = ? and outcome = 1")
-										   x)))
-				 (losses (length (db-to-list (str "select * from matches where"
-												  " deck = ? and outcome = 0")
-									  x))))
-			 (cons x (list (cons 'wins wins)
-						   (cons 'losses losses)
-						   (cons 'total (+ wins losses))
-						   (cons 'winrate (winrate wins (+ wins losses)))))))
-	   (deck-names)))
+  (let* ((q "select * from matches where deck = ? and outcome = ? ")
+		 (read-fn (lambda (x)
+					(let* ((wins (length (db-to-list q x 1)))
+						   (losses (length (db-to-list q x 0)))
+						   (total (+ wins losses))
+						   (winrate (winrate wins total)))
+					  (cons x (list (cons 'wins wins)
+									(cons 'losses losses)
+									(cons 'total total)
+									(cons 'winrate winrate)))))))
+	(sort (map 'list read-fn (deck-names))
+		  #'string-lessp :key #'car)))
 
 (defun match-stats-range (from to &optional deck)
   (let ((qs (if deck
