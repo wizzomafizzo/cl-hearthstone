@@ -30,6 +30,18 @@
 
 .stats {
 	text-align: center;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
+.stats ul {
+	margin-bottom: 0px;
+	margin-top: 3px;
+}
+
+.stats ul li {
+	text-align: left;
+	padding: 5px;
 }
 
 #filter_reset {

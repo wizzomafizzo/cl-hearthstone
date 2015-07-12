@@ -100,6 +100,22 @@
 				 (map 'list #'(lambda (x) (lk 'winrate (cdr x)))
 					  stats))))))
 
+(defun worst-against->template (&optional deck)
+  (let ((stats (worst-against-week deck)))
+	(map 'list
+		 #'(lambda (x)
+			 (list :hero (car x)
+				   :winrate (cdr x)))
+		 (subseq stats 0 5))))
+
+(defun seen-against->template (&optional deck)
+  (let ((stats (seen-against-week deck)))
+	(map 'list
+		 #'(lambda (x)
+			 (list :hero (car x)
+				   :total (cdr x)))
+		 (subseq stats 0 5))))
+
 (defun hero-select (selected)
   (map 'list
 	   #'(lambda (x)
@@ -115,7 +131,7 @@
 (defun download-matches ()
   (with-http-authentication (hunchentoot:no-cache)
 	(setf (hunchentoot:content-type*) "text/json")
-	(export-matches)))
+	(jsown:to-json (export-matches))))
 
 (defun index-page ()
   (with-http-authentication (hunchentoot:no-cache)
@@ -149,7 +165,9 @@
 					   :against-graph-labels (lk 'labels against-graph)
 					   :against-graph-wins (lk 'wins against-graph)
 					   :against-graph-losses (lk 'losses against-graph)
-					   :against-graph-winrate (lk 'winrate against-graph))))
+					   :against-graph-winrate (lk 'winrate against-graph)
+					   :seen-against (seen-against->template get-deck)
+					   :worst-against (worst-against->template get-deck))))
 	  (with-output-to-string (html-template:*default-template-output*)
 		(html-template:fill-and-print-template #p"templates/hearthstone.html"
 											   vals)))))

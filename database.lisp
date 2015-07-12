@@ -16,8 +16,7 @@
 					 "notes text, outcome integer)")))
 
 (defun export-matches ()
-  (let ((r (db-to-list "select rowid,* from matches")))
-	(jsown:to-json r)))
+  (db-to-list "select rowid,* from matches"))
 
 (defun add-match (hero deck against notes outcome)
   (let ((q "insert into matches values (?, ?, ?, ?, ?, ?)")
@@ -155,6 +154,31 @@
 						 (cons 'losses losses)
 						 (cons 'winrate (winrate wins (+ wins
 														 losses)))))))))
+
+(defun worst-against-range (from to &optional deck)
+  (let ((stats (against-stats-range from to deck)))
+	(sort (map 'list
+			   #'(lambda (x)
+				   (cons (car x)
+						 (cdr (assoc 'winrate (cdr x)))))
+			   stats)
+		  #'> :key #'cdr)))
+
+(defun seen-against-range (from to &optional deck)
+  (let ((stats (against-stats-range from to deck)))
+	(sort (map 'list
+			   #'(lambda (x)
+				   (cons (car x)
+						 (+ (cdr (assoc 'wins (cdr x)))
+							(cdr (assoc 'losses (cdr x))))))
+			   stats)
+		  #'> :key #'cdr)))
+
+(defun worst-against-week (&optional deck)
+  (worst-against-range (a-week-ago) (now) deck))
+
+(defun seen-against-week (&optional deck)
+  (seen-against-range (a-week-ago) (now) deck))
 
 (defun against-stats-week (&optional deck)
   (against-stats-range (- (now) (* 60 60 24 7)) (now) deck))

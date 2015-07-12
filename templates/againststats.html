@@ -1,0 +1,37 @@
+<div class="col-md-6 stats">
+	<div class="well">
+		<span class="glyphicon glyphicon-eye-open"
+			title="Against Seen - Week"
+			data-toggle="tooltip">
+		</span>
+		<ul class="list-group">
+			<!-- TMPL_LOOP seen-against -->
+			<li class="list-group-item">
+				<!-- TMPL_VAR hero -->
+				<span class="badge">
+					<!-- TMPL_VAR total -->
+				</span>
+			</li>
+			<!-- /TMPL_LOOP -->
+		</ul>
+	</div>
+</div>
+
+<div class="col-md-6 stats">
+	<div class="well">
+		<span class=" glyphicon glyphicon-thumbs-down"
+			title="Worst Against - Week"
+			data-toggle="tooltip">
+		</span>
+		<ul class="list-group">
+			<!-- TMPL_LOOP worst-against -->
+			<li class="list-group-item">
+				<!-- TMPL_VAR hero -->
+				<span class="badge">
+					<!-- TMPL_VAR winrate -->%
+				</span>
+			</li>
+			<!-- /TMPL_LOOP -->
+		</ul>
+	</div>
+</div>
