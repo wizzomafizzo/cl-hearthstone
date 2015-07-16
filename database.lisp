@@ -98,7 +98,8 @@
 		  (cons 'overall (apply #'match-stats-range 0 args)))))
 
 (defun daily-match-stats (days-back &optional deck)
-  (let ((date (now))
+  (let ((from (start-of-today))
+		(to (end-of-today))
 		(day (* 60 60 24))
 		(qs (if deck
 				(list (str "select * from matches where"
@@ -112,8 +113,8 @@
 					  (str "select * from matches where"
 						   " date between ? and ? and outcome = 0")))))
 	(loop for x from 1 to days-back
-	   collect (let* ((to (- date (* day (- x 1))))
-					  (from (- date (* day x)))
+	   collect (let* ((from (- from (* day x)))
+					  (to (- to (* day x)))
 					  (wins (length (if deck
 										(db-to-list (car qs) from to deck)
 										(db-to-list (car qs) from to))))

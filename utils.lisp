@@ -28,6 +28,11 @@
 	(apply #'encode-universal-time
 		   (concatenate 'list '(0 0 0) date))))
 
+(defun end-of-today ()
+  (let ((date (subseq (multiple-value-list (get-decoded-time)) 3 6)))
+	(apply #'encode-universal-time
+		   (concatenate 'list '(59 59 23) date))))
+
 (defun a-week-ago ()
   (- (now) (* 60 60 24 7)))
 
