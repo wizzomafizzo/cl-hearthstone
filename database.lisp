@@ -113,8 +113,8 @@
 					  (str "select * from matches where"
 						   " date between ? and ? and outcome = 0")))))
 	(loop for x from 1 to days-back
-	   collect (let* ((from (- from (* day x)))
-					  (to (- to (* day x)))
+	   collect (let* ((from (- from (* day (- x 1))))
+					  (to (- to (* day (- x 1))))
 					  (wins (length (if deck
 										(db-to-list (car qs) from to deck)
 										(db-to-list (car qs) from to))))
