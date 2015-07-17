@@ -16,7 +16,7 @@
 
 .outcome {
 	margin-top: 0.5em;
-	width: 100px;
+	width: 75px;
 }
 
 .table {
@@ -65,9 +65,9 @@
 	height: 100% !important;
 }
 
-.col-md-12, .col-md-4 {
-	padding-left: 8px;
-	padding-right: 8px;
+.col-md-12, .col-md-4, .col-md-5, .col-md-3 {
+	padding-left: 4px;
+	padding-right: 4px;
 }
 
 .container {
@@ -87,4 +87,8 @@ table td {
 	right: 10px;
 	bottom: -5px;
 	font-size: 200%;
+}
+
+.right {
+	float: right;
 }

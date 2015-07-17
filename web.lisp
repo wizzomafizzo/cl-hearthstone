@@ -34,12 +34,13 @@
 		 #'(lambda (x)
 			 (list :date (human-date (lk 'date x))
 				   :time (human-time (lk 'date x))
-				   :hero (lk 'hero x)
+				   :type (lk 'type x)
 				   :deck (lk 'deck x)
 				   :against (lk 'against x)
 				   :notes (lk 'notes x)
 				   :are-notes (not (equal (lk 'notes x) ""))
-				   :outcome (lk 'outcome x)))
+				   :outcome (lk 'outcome x)
+				   :id (lk 'id x)))
 		 matches)))
 
 (defun all-match-stats->template (&optional deck)
@@ -48,7 +49,7 @@
 		 #'(lambda (x)
 			 (list :name (cond ((eq (car x) 'today) "Today")
 							   ((eq (car x) 'week) "Week")
-							   ((eq (car x) 'season) "Season")
+							   ((eq (car x) 'season) "Month")
 							   ((eq (car x) 'overall) "Overall"))
 				   :wins (lk 'wins (cdr x))
 				   :losses (lk 'losses (cdr x))
@@ -59,53 +60,41 @@
 
 (defun daily-match-stats->template (&optional deck)
   (let ((stats (daily-match-stats-week deck)))
-	(list (cons 'labels
-				(format
-				 nil "~{~A~^,~}"
-				 (map 'list
-					  #'(lambda (x) (human-date (lk 'date x)))
-					  stats)))
-		  (cons 'wins
-				(jsown:to-json
-				 (map 'list
-					  #'(lambda (x) (lk 'wins x))
-					  stats)))
-		  (cons 'losses
-				(jsown:to-json
-				 (map 'list
-					  #'(lambda (x) (lk 'losses x))
-					  stats)))
-		  (cons 'winrate
-				(jsown:to-json
-				 (map 'list
-					  #'(lambda (x) (lk 'winrate x))
-					  stats))))))
+	(list (cons 'labels (format nil "~{~A~^,~}"
+								(map 'list
+									 #'(lambda (x) (human-date (lk 'date x)))
+									 stats)))
+		  (cons 'wins (jsown:to-json (map 'list
+										  #'(lambda (x) (lk 'wins x))
+										  stats)))
+		  (cons 'losses (jsown:to-json (map 'list
+											#'(lambda (x) (lk 'losses x))
+											stats)))
+		  (cons 'winrate (jsown:to-json (map 'list
+											 #'(lambda (x) (lk 'winrate x))
+											 stats))))))
 
 (defun against-stats->template (&optional deck)
   (let ((stats (against-stats-season deck)))
 	(list (cons 'labels
 				(format nil "~{~A~^,~}"
-						(map 'list #'(lambda (x) (car x))
-							 stats)))
+						(map 'list #'(lambda (x) (car x))stats)))
 		  (cons 'wins
 				(jsown:to-json
-				 (map 'list #'(lambda (x) (lk 'wins (cdr x)))
-					  stats)))
+				 (map 'list #'(lambda (x) (lk 'wins (cdr x))) stats)))
 		  (cons 'losses
 				(jsown:to-json
-				 (map 'list #'(lambda (x) (lk 'losses (cdr x)))
-					  stats)))
+				 (map 'list #'(lambda (x) (lk 'losses (cdr x))) stats)))
 		  (cons 'winrate
 				(jsown:to-json
-				 (map 'list #'(lambda (x) (lk 'winrate (cdr x)))
-					  stats))))))
+				 (map 'list #'(lambda (x) (lk 'winrate (cdr x))) stats))))))
 
 (defun worst-against->template (&optional deck)
   (let ((stats (worst-against-week deck)))
 	(map 'list
 		 #'(lambda (x)
 			 (list :hero (car x)
-				   :winrate (cdr x)))
+				   :losses (cdr x)))
 		 (subseq stats 0 5))))
 
 (defun seen-against->template (&optional deck)
@@ -116,6 +105,14 @@
 				   :total (cdr x)))
 		 (subseq stats 0 5))))
 
+(defun type-select (selected)
+  (map 'list
+	   #'(lambda (x)
+		   (list :type x
+				 :selected (if (equal selected x)
+							   "selected")))
+	   *game-types*))
+
 (defun hero-select (selected)
   (map 'list
 	   #'(lambda (x)
@@ -123,6 +120,13 @@
 				 :selected (if (equal selected x)
 							   "selected")))
 	   (lk 'heroes *config*)))
+
+(defun games-until-legend ()
+  (let* ((stats (stats-this-season)))
+	(- (cdar (last (loop for x in (reverse (lk 'winrate-legend *config*))
+					  while (>= (lk 'winrate stats) (car x))
+					  collect x)))
+	   (lk 'total stats))))
 
 (defun undo-submit ()
   (with-http-authentication (remove-match *last-added*)
@@ -133,25 +137,35 @@
 	(setf (hunchentoot:content-type*) "text/json")
 	(jsown:to-json (export-matches))))
 
+(defun average-length ()
+  (let ((len (average-match-length (reverse (matches-this-season)))))
+	(float (round-to (/ len 60) 1))))
+
+(defun time-to-legend ()
+  (float (round-to (/ (* (games-until-legend)
+						 (average-length))
+					  60)
+				   1)))
+
 (defun index-page ()
   (with-http-authentication (hunchentoot:no-cache)
 	(setq *last-added* nil)
 	(if (and (eq (hunchentoot:request-method hunchentoot:*request*) :POST)
-			 (pp "hero")
+			 (pp "type")
 			 (not (equal "" (pp "deck")))
 			 (pp "against")
 			 (pp "outcome"))
 		(setq *last-added*
-			  (add-match (pp "hero") (pp "deck")
+			  (add-match (pp "type") (pp "deck")
 						 (pp "against") (pp "notes")
 						 (if (equal (pp "outcome") "win") t))))
 	(let* ((get-deck (gp "deck"))
 		   (post-deck (pp "deck"))
-		   (hero (pp "hero"))
+		   (type (pp "type"))
 		   (daily-graph (daily-match-stats->template get-deck))
 		   (against-graph (against-stats->template get-deck))
-		   (vals (list :heroes (hero-select hero)
-					   :last-hero hero
+		   (season (stats-this-season))
+		   (vals (list :heroes (hero-select nil)
 					   :last-deck (or post-deck get-deck)
 					   :last-added *last-added*
 					   :filter-deck get-deck
@@ -167,7 +181,18 @@
 					   :against-graph-losses (lk 'losses against-graph)
 					   :against-graph-winrate (lk 'winrate against-graph)
 					   :seen-against (seen-against->template get-deck)
-					   :worst-against (worst-against->template get-deck))))
+					   :worst-against (worst-against->template get-deck)
+					   :game-types (type-select type)
+					   :current-rank (current-rank)
+					   :average-length (average-length)
+					   :season-wins (lk 'wins season)
+					   :season-losses (lk 'losses season)
+					   :season-total (lk 'total season)
+					   :season-winrate (lk 'winrate season)
+					   :season-class (winrate->template (lk 'winrate season))
+					   :games-until-legend (games-until-legend)
+					   :time-to-legend (time-to-legend)
+					   :not-in-legend (not (equal (current-rank) "Legend")))))
 	  (with-output-to-string (html-template:*default-template-output*)
 		(html-template:fill-and-print-template #p"templates/hearthstone.html"
 											   vals)))))

@@ -17,13 +17,14 @@
 			<!-- TMPL_LOOP all-matches -->
 			<tr>
 				<td>
-					<span title="<!-- TMPL_VAR time -->" data-toggle="tooltip">
+					<span title="#<!-- TMPL_VAR id --> - <!-- TMPL_VAR time -->"
+						data-toggle="tooltip">
 						<!-- TMPL_VAR date -->
 					</span>
 				</td>
 				<td>
 					<a href="/?deck=<!-- TMPL_VAR deck -->"
-						title="<!-- TMPL_VAR hero -->" data-toggle="tooltip">
+						title="<!-- TMPL_VAR type -->" data-toggle="tooltip">
 						<!-- TMPL_VAR deck -->
 					</a>
 				</td>

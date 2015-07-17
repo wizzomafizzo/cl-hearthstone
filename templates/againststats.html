@@ -8,9 +8,11 @@
 			<!-- TMPL_LOOP seen-against -->
 			<li class="list-group-item">
 				<!-- TMPL_VAR hero -->
-				<span class="badge">
-					<!-- TMPL_VAR total -->
-				</span>
+				<strong>
+					<span class="right">
+						<!-- TMPL_VAR total -->
+					</span>
+				</strong>
 			</li>
 			<!-- /TMPL_LOOP -->
 		</ul>
@@ -20,16 +22,18 @@
 <div class="col-md-6 stats">
 	<div class="well">
 		<span class=" glyphicon glyphicon-thumbs-down"
-			title="Worst Against - Week"
+			title="Against Losses - Week"
 			data-toggle="tooltip">
 		</span>
 		<ul class="list-group">
 			<!-- TMPL_LOOP worst-against -->
 			<li class="list-group-item">
 				<!-- TMPL_VAR hero -->
-				<span class="badge">
-					<!-- TMPL_VAR winrate -->%
-				</span>
+				<strong>
+					<span class="right">
+						<!-- TMPL_VAR losses -->
+					</span>
+				</strong>
 			</li>
 			<!-- /TMPL_LOOP -->
 		</ul>

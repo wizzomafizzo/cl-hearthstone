@@ -26,26 +26,12 @@
 						<!-- TMPL_IF last-added -->
 						<div class="col-md-12">
 							<div class="alert alert-success" role="alert">
-								Added match:
-								<strong><!-- TMPL_VAR last-added --></strong>
+								Added match
+								<strong>#<!-- TMPL_VAR last-added --></strong>
 								<a href="/undo" class="btn-xs btn-default"
 									id="filter_reset"
 									title="Undo" data-toggle="tooltip">
 									<span class="glyphicon glyphicon-floppy-remove">
-									</span>
-								</a>
-							</div>
-						</div>
-						<!-- /TMPL_IF -->
-
-						<!-- TMPL_IF filter-deck -->
-						<div class="col-md-12">
-							<div class="alert alert-info" role="alert">
-								Filtered by deck:
-								<strong><!-- TMPL_VAR filter-deck --></strong>
-								<a href="/" class="btn-xs btn-default"
-									id="filter_reset">
-									<span class="glyphicon glyphicon-refresh">
 									</span>
 								</a>
 							</div>
@@ -59,6 +45,23 @@
 
 					<div class="col-md-4">
 						<div class="col-md-12">
+							<!-- TMPL_INCLUDE "./templates/seasonstats.html" -->
+						</div>
+
+						<!-- TMPL_IF filter-deck -->
+						<div class="col-md-12">
+							<div class="alert alert-info" role="alert">
+								<strong><!-- TMPL_VAR filter-deck --></strong>
+								<a href="/" class="btn-xs btn-default"
+									id="filter_reset">
+									<span class="glyphicon glyphicon-refresh">
+									</span>
+								</a>
+							</div>
+						</div>
+						<!-- /TMPL_IF -->
+
+						<div class="col-md-12">
 							<!-- TMPL_INCLUDE "./templates/stats.html" -->
 						</div>
 
@@ -71,18 +74,16 @@
 						</div>
 
 						<div class="col-md-12">
-							<!-- TMPL_INCLUDE "./templates/againststats.html" -->
-						</div>
-
-						<div class="col-md-12">
 							<div class="well">
-								<canvas title="Against Stats - Season"
+								<canvas title="Against Stats - Month"
 									data-toggle="tooltip"
 									id="hero-stats"></canvas>
 							</div>
 						</div>
 
-
+						<div class="col-md-12">
+							<!-- TMPL_INCLUDE "./templates/againststats.html" -->
+						</div>
 					</div>
 
 					<div class="col-md-4">

@@ -11,7 +11,7 @@
 
 (defun create-db ()
   (db-non-query (str "create table if not exists matches "
-					 "(date integer, hero text, "
+					 "(date integer, type text, "
 					 "deck text, against text, "
 					 "notes text, outcome integer)")))
 
@@ -33,7 +33,7 @@
 	(setf (nth 6 result) outcome)
 	(list (cons 'id (nth 0 result))
 		  (cons 'date (nth 1 result))
-		  (cons 'hero (nth 2 result))
+		  (cons 'type (nth 2 result))
 		  (cons 'deck (nth 3 result))
 		  (cons 'against (nth 4 result))
 		  (cons 'notes (nth 5 result))
@@ -48,6 +48,29 @@
 									  " order by date desc limit ?")
 								 (lk 'match-limit *config*)))))
 	(map 'list #'read-match results)))
+
+(defun matches-this-season ()
+  (map 'list
+	   #'read-match
+	   (db-to-list (str "select rowid,* from matches"
+						" where date between ? and ?"
+						" and type != 'Casual'")
+				   (start-of-month) (now))))
+
+(defun stats-this-season ()
+  (let ((all (length (db-to-list (str "select rowid,* from matches"
+									  " where date between ? and ?"
+									  " and type != 'Casual'")
+								 (start-of-month) (now))))
+		(wins (length (db-to-list (str "select rowid,* from matches"
+									   " where date between ? and ?"
+									   " and type != 'Casual'"
+									   " and outcome = 1")
+								  (start-of-month) (now)))))
+	(list (cons 'total all)
+		  (cons 'wins wins)
+		  (cons 'losses (- all wins))
+		  (cons 'winrate (winrate wins all)))))
 
 (defun deck-names ()
   (map 'list #'(lambda (x) (car x))
@@ -161,9 +184,9 @@
 	(sort (map 'list
 			   #'(lambda (x)
 				   (cons (car x)
-						 (cdr (assoc 'winrate (cdr x)))))
+						 (cdr (assoc 'losses (cdr x)))))
 			   stats)
-		  #'< :key #'cdr)))
+		  #'> :key #'cdr)))
 
 (defun seen-against-range (from to &optional deck)
   (let ((stats (against-stats-range from to deck)))
@@ -186,3 +209,35 @@
 
 (defun against-stats-season (&optional deck)
   (against-stats-range (start-of-month) (now) deck))
+
+(defun current-rank ()
+  (let ((rank (first (loop for y in (map 'list
+										 #'(lambda (x) (cdr (assoc 'type x)))
+										 (reverse (matches-this-season)))
+						if (not (equal y "Casual"))
+						collect y))))
+	(if rank rank "Rank 25")))
+
+(defun average-match-length (matches)
+  (let* ((match-limit (* 60 15))
+		 (matches (reverse matches))
+		 (last-date (cdr (assoc 'date (first matches))))
+		 (current-session nil)
+		 (sessions nil)
+		 (match-times nil))
+	(loop for x in matches
+	   do (let ((delta (- (cdr (assoc 'date x)) last-date)))
+			(if (<= delta match-limit)
+				(progn
+				  (if (> delta 0)
+					  (setf match-times (cons delta match-times)))
+				  (setf current-session (cons x current-session))
+				  (setf last-date (cdr (assoc 'date x))))
+				(progn
+				  (setf sessions (cons current-session sessions))
+				  (setf current-session x)
+				  (setf last-date (cdr (assoc 'date x)))))))
+	(if match-times
+		(/ (apply #'+ match-times)
+		   (length match-times))
+		0)))

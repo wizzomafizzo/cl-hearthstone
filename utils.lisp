@@ -19,6 +19,10 @@
 (defun lk (item alist)
   (cdr (assoc item alist)))
 
+(defun flatten (ls)
+  (labels ((mklist (x) (if (listp x) x (list x))))
+    (mapcan #'(lambda (x) (if (atom x) (mklist x) (flatten x))) ls)))
+
 (defun round-to (number precision &optional (what #'round))
     (let ((div (expt 10 precision)))
          (/ (funcall what (* number div)) div)))

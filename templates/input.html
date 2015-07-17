@@ -2,10 +2,10 @@
 	<form method="POST"
 		action="/<!-- TMPL_IF filter-deck -->?deck=<!-- TMPL_VAR filter-deck --><!-- /TMPL_IF -->">
 		<div class="form-group">
-			<select class="form-control" name="hero">
-				<!-- TMPL_LOOP heroes -->
+			<select class="form-control" name="type">
+				<!-- TMPL_LOOP game-types -->
 				<option <!-- TMPL_VAR selected -->>
-					<!-- TMPL_VAR hero -->
+					<!-- TMPL_VAR type -->
 				</option>
 				<!-- /TMPL_LOOP -->
 			</select>
