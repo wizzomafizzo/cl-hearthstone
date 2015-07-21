@@ -90,6 +90,10 @@
 	(sort (map 'list read-fn (deck-names))
 		  #'string-lessp :key #'car)))
 
+(defun rename-deck (from to)
+  (db-non-query "update matches set deck = ? where deck = ?"
+				to from))
+
 (defun match-stats-range (from to &optional deck)
   (let ((qs (if deck
 				(list (str "select * from matches where"
