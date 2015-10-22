@@ -92,3 +92,7 @@ table td {
 .right {
 	float: right;
 }
+
+.deck-name {
+	text-align: left;
+}
