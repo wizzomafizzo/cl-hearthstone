@@ -28,10 +28,6 @@
   (let ((q "delete from matches where rowid = ?"))
 	(db-non-query q id)))
 
-(defun get-match (id)
-  (let ((q "select rowid,* from matches where rowid = ?"))
-	(read-match (car (db-to-list q id)))))
-
 (defun read-match (result)
   (let ((outcome (if (= (nth 6 result) 1) t nil)))
 	(setf (nth 6 result) outcome)
@@ -42,6 +38,10 @@
 		  (cons 'against (nth 4 result))
 		  (cons 'notes (nth 5 result))
 		  (cons 'outcome (nth 6 result)))))
+
+(defun get-match (id)
+  (let ((q "select rowid,* from matches where rowid = ?"))
+	(read-match (car (db-to-list q id)))))
 
 (defun all-matches (&optional deck)
   (let ((results (if deck
