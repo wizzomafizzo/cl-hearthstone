@@ -1,4 +1,5 @@
 *.fasl
 *.org
-*.db
+*.db*
+*.json
 auth.conf

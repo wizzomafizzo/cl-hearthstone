@@ -1,5 +1,8 @@
 ;;;; utils.lisp
 
+(defvar *unix-epoch-difference*
+  (encode-universal-time 0 0 0 1 1 1970 0))
+
 (defun str (&rest strings)
   (apply #'concatenate 'string strings))
 
@@ -58,3 +61,26 @@
   (if (not (and (= wins 0) (= total 0)))
 	  (float (round-to (/ (* wins 100) total) 1))
 	  0))
+
+(defun my-copy-file (from-file to-file)
+  (with-open-file (input-stream from-file
+								:direction :input
+								:element-type '(unsigned-byte 8))
+    (with-open-file (output-stream to-file
+								   :direction :output
+								   :if-exists :supersede
+								   :if-does-not-exist :create
+								   :element-type '(unsigned-byte 8))
+      (let ((buf (make-array 4096 :element-type (stream-element-type input-stream))))
+		(loop for pos = (read-sequence buf input-stream)
+		   while (plusp pos)
+		   do (write-sequence buf output-stream :end pos))))))
+
+(defun universal-to-unix-time (universal-time)
+  (- universal-time *unix-epoch-difference*))
+
+(defun unix-to-universal-time (unix-time)
+  (+ unix-time *unix-epoch-difference*))
+
+(defun get-unix-time ()
+  (universal-to-unix-time (get-universal-time)))

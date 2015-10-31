@@ -133,12 +133,15 @@
 	   (lk 'total stats))))
 
 (defun undo-submit ()
-  (with-http-authentication (remove-match *last-added*)
-	(hunchentoot:redirect "/")))
+  (with-http-authentication
+	  (let* ((match (get-match *last-added*))
+			 (url-name (do-urlencode:urlencode (lk 'deck match))))
+		(remove-match *last-added*)
+		(hunchentoot:redirect (str "/?deck=" url-name)))))
 
 (defun download-matches ()
   (with-http-authentication (hunchentoot:no-cache)
-	(setf (hunchentoot:content-type*) "text/json")
+	(setf (hunchentoot:content-type*) "application/json")
 	(jsown:to-json (export-matches))))
 
 (defun average-length ()

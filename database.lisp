@@ -18,15 +18,19 @@
 (defun export-matches ()
   (db-to-list "select rowid,* from matches"))
 
-(defun add-match (hero deck against notes outcome)
+(defun add-match (mode deck against notes outcome)
   (let ((q "insert into matches values (?, ?, ?, ?, ?, ?)")
 		(outcome (if outcome 1 0)))
-	(db-single q (now) hero deck against notes outcome)
+	(db-single q (now) mode deck against notes outcome)
 	(sqlite:last-insert-rowid *db*)))
 
 (defun remove-match (id)
   (let ((q "delete from matches where rowid = ?"))
 	(db-non-query q id)))
+
+(defun get-match (id)
+  (let ((q "select rowid,* from matches where rowid = ?"))
+	(read-match (car (db-to-list q id)))))
 
 (defun read-match (result)
   (let ((outcome (if (= (nth 6 result) 1) t nil)))
@@ -93,6 +97,9 @@
 (defun rename-deck (from to)
   (db-non-query "update matches set deck = ? where deck = ?"
 				to from))
+
+(defun remove-deck (name)
+  (db-non-query "delete from matches where deck = ?" name))
 
 (defun match-stats-range (from to &optional deck)
   (let ((qs (if deck
@@ -245,3 +252,16 @@
 		(/ (apply #'+ match-times)
 		   (length match-times))
 		0)))
+
+(defun backup-db ()
+  (let ((filename (str (lk 'db *config*) "-"
+					   (princ-to-string (get-unix-time)))))
+	(my-copy-file (lk 'db *config*) filename)))
+
+(defun import-json (filename)
+  (let* ((json (slurp filename))
+		 (data (jsown:parse json))
+		 (q "insert into matches values (?, ?, ?, ?, ?, ?)"))
+	(loop for x in data
+	   do (db-non-query q (nth 1 x) (nth 2 x) (nth 3 x)
+						(nth 4 x) (nth 5 x) (nth 6 x)))))
