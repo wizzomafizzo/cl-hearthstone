@@ -96,7 +96,3 @@ table td {
 .deck-name {
 	text-align: left;
 }
-
-#deck-name-input {
-	text-transform: capitalize;
-}
