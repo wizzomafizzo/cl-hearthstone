@@ -1,22 +1,19 @@
 <div class="well input-match">
 	<form method="POST"
-		action="/<!-- TMPL_IF filter-deck -->?deck=<!-- TMPL_VAR filter-deck --><!-- /TMPL_IF -->">
+		action="/<!-- TMPL_IF filter-deck -->?deck=<!-- TMPL_VAR encoded-deck --><!-- /TMPL_IF -->">
 		<div class="form-group">
 			<select class="form-control" name="type">
-				<!-- TMPL_LOOP game-types -->
-				<option <!-- TMPL_VAR selected -->>
-					<!-- TMPL_VAR type -->
-				</option>
+				<!-- TMPL_LOOP game-types --><option <!-- TMPL_VAR selected -->><!-- TMPL_VAR type --></option>
 				<!-- /TMPL_LOOP -->
 			</select>
 			<input type="text"
+				id="deck-name-input"
 				class="form-control"
 				placeholder="Deck" name="deck"
 				value="<!-- TMPL_VAR last-deck -->">
 			<div class="versus">VS</div>
 			<select class="form-control" name="against">
-				<!-- TMPL_LOOP heroes -->
-				<option><!-- TMPL_VAR hero --></option>
+				<!-- TMPL_LOOP heroes --><option><!-- TMPL_VAR hero --></option>
 				<!-- /TMPL_LOOP -->
 			</select>
 			<input type="text" class="form-control"

@@ -2,47 +2,19 @@
 	<table class="table table-condensed">
 		<thead>
 			<tr>
-				<th><span class="glyphicon glyphicon-align-justify"
-						title="Deck" data-toggle="tooltip"></span></th>
-				<th><span class="glyphicon glyphicon-calendar"
-						title="Date" data-toggle="tooltip"></span></th>
-				<!-- <th><span class="glyphicon glyphicon-user"></span></th> -->
-				<th><span class="glyphicon glyphicon-screenshot"
-						title="Against" data-toggle="tooltip"></span></th>
-				<th><span class="glyphicon glyphicon-flag"
-						title="Outcome" data-toggle="tooltip"></span></th>
+				<th><span class="glyphicon glyphicon-align-justify" title="Deck" data-toggle="tooltip"></span></th>
+				<th><span class="glyphicon glyphicon-calendar" title="Date" data-toggle="tooltip"></span></th>
+				<th><span class="glyphicon glyphicon-screenshot" title="Against" data-toggle="tooltip"></span></th>
+				<th><span class="glyphicon glyphicon-flag" title="Outcome" data-toggle="tooltip"></span></th>
 			</tr>
 		</thead>
 		<tbody>
-			<!-- TMPL_LOOP all-matches -->
-			<tr>
-				<td class="deck-name">
-					<a href="/?deck=<!-- TMPL_VAR deck -->"
-						title="<!-- TMPL_VAR type -->" data-toggle="tooltip">
-						<!-- TMPL_VAR deck -->
-					</a>
-				</td>
-				<td>
-					<span title="#<!-- TMPL_VAR id --> - <!-- TMPL_VAR time -->"
-						data-toggle="tooltip">
-						<!-- TMPL_VAR date -->
-					</span>
-				</td>
+			<!-- TMPL_LOOP all-matches --><tr>
+				<td class="deck-name"><a href="/?deck=<!-- TMPL_VAR encoded-deck -->" title="<!-- TMPL_VAR type -->" data-toggle="tooltip"><!-- TMPL_VAR escaped-deck --></a></td>
+				<td><span title="#<!-- TMPL_VAR id --> - <!-- TMPL_VAR time -->" data-toggle="tooltip"><!-- TMPL_VAR date --></span></td>
 				<td><!-- TMPL_VAR against --></td>
-				<!-- TMPL_IF outcome -->
-				<td>
-					<span title="<!-- TMPL_VAR notes -->"
-						class="label label-success" data-toggle="tooltip">
-						WIN<!-- TMPL_IF are-notes -->...<!-- /TMPL_IF -->
-					</span>
-				</td>
-				<!-- TMPL_ELSE -->
-				<td>
-					<span title="<!-- TMPL_VAR notes -->"
-						class="label label-danger" data-toggle="tooltip">
-						LOSE<!-- TMPL_IF are-notes -->...<!-- /TMPL_IF -->
-					</span>
-				</td>
+				<!-- TMPL_IF outcome --><td><span title="<!-- TMPL_VAR notes -->" class="label label-success" data-toggle="tooltip">WIN<!-- TMPL_IF are-notes -->...<!-- /TMPL_IF --></span></td>
+				<!-- TMPL_ELSE --><td><span title="<!-- TMPL_VAR notes -->" class="label label-danger" data-toggle="tooltip">LOSE<!-- TMPL_IF are-notes -->...<!-- /TMPL_IF --></span></td>
 				<!-- /TMPL_IF -->
 			</tr>
 			<!-- /TMPL_LOOP -->

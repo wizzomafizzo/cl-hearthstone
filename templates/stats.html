@@ -2,16 +2,11 @@
 	<table class="table table-condensed">
 		<thead>
 			<tr>
-				<th><span class="glyphicon glyphicon-calendar"
-						title="Date Range" data-toggle="tooltip"></span></th>
-				<th><span class="glyphicon glyphicon-ok"
-						title="Wins" data-toggle="tooltip"></span></th>
-				<th><span class="glyphicon glyphicon-remove"
-						title="Losses" data-toggle="tooltip"></span></th>
-				<th><span class="glyphicon glyphicon-flag"
-						title="Total" data-toggle="tooltip"></span></th>
-				<th><span class="glyphicon glyphicon-stats"
-						title="Winrate" data-toggle="tooltip"></span></th>
+				<th><span class="glyphicon glyphicon-calendar" title="Date Range" data-toggle="tooltip"></span></th>
+				<th><span class="glyphicon glyphicon-ok" title="Wins" data-toggle="tooltip"></span></th>
+				<th><span class="glyphicon glyphicon-remove" title="Losses" data-toggle="tooltip"></span></th>
+				<th><span class="glyphicon glyphicon-flag" title="Total" data-toggle="tooltip"></span></th>
+				<th><span class="glyphicon glyphicon-stats" title="Winrate" data-toggle="tooltip"></span></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -21,9 +16,7 @@
 				<td><!-- TMPL_VAR wins --></td>
 				<td><!-- TMPL_VAR losses --></td>
 				<td><!-- TMPL_VAR total --></td>
-				<td><span class="label <!-- TMPL_VAR class -->">
-					<!-- TMPL_VAR winrate -->%
-				</span></td>
+				<td><span class="label <!-- TMPL_VAR class -->"><!-- TMPL_VAR winrate -->%</span></td>
 			</tr>
 			<!-- /TMPL_LOOP -->
 		</tbody>

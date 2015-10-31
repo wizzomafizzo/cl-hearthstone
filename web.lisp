@@ -9,7 +9,7 @@
      (cond ((and (string= username (car *auth*))
 				 (string= password (cdr *auth*)))
             ,@body)
-           (t (hunchentoot:require-authorization "HS Tracker")))))
+           (t (hunchentoot:require-authorization "Hearthlisp")))))
 
 (defun winrate->template (winrate)
   (cond ((< winrate (car (lk 'winrate-tiers *config*))) "label-danger")
@@ -21,6 +21,8 @@
 	(map 'list
 		 #'(lambda (x)
 			 (list :name (car x)
+				   :encoded-name (do-urlencode:urlencode (car x))
+				   :escaped-name (html-template:escape-string (car x))
 				   :wins (lk 'wins (cdr x))
 				   :losses (lk 'losses (cdr x))
 				   :total (lk 'total (cdr x))
@@ -36,6 +38,8 @@
 				   :time (human-time (lk 'date x))
 				   :type (lk 'type x)
 				   :deck (lk 'deck x)
+				   :encoded-deck (do-urlencode:urlencode (lk 'deck x))
+				   :escaped-deck (html-template:escape-string (lk 'deck x))
 				   :against (lk 'against x)
 				   :notes (lk 'notes x)
 				   :are-notes (not (equal (lk 'notes x) ""))
@@ -168,7 +172,8 @@
 		   (vals (list :heroes (hero-select nil)
 					   :last-deck (or post-deck get-deck)
 					   :last-added *last-added*
-					   :filter-deck get-deck
+					   :filter-deck (html-template:escape-string get-deck)
+					   :encoded-deck (do-urlencode:urlencode get-deck)
 					   :all-match-stats (all-match-stats->template get-deck)
 					   :all-decks (all-decks->template)
 					   :all-matches (all-matches->template get-deck)
