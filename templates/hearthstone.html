@@ -6,11 +6,11 @@
 		<meta name="viewport"
 			content="width=device-width, user-scalable=no, initial-scale=1" />
 		<title>Hearthlisp</title>
-		<link rel="shortcut icon" href="/static/favicon.png" type="image/x-icon">
-		<link rel="icon" href="/static/favicon.png" type="image/x-icon">
-		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
-		<link href="/static/css/bootstrap-theme.min.css" rel="stylesheet">
-		<link href="/static/css/hearthstone.css" rel="stylesheet">
+		<link rel="shortcut icon" href="static/favicon.png" type="image/x-icon">
+		<link rel="icon" href="static/favicon.png" type="image/x-icon">
+		<link href="static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="static/css/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="static/css/hearthstone.css" rel="stylesheet">
 	</head>
 	<body>
 <!-- TMPL_INCLUDE "./templates/navbar.html" -->
@@ -25,7 +25,7 @@
 							<div class="alert alert-success" role="alert">
 								Added match
 								<strong>#<!-- TMPL_VAR last-added --></strong>
-								<a href="/undo" class="btn-xs btn-default"
+								<a href="./undo" class="btn-xs btn-default"
 									id="filter_reset"
 									title="Undo" data-toggle="tooltip">
 									<span class="glyphicon glyphicon-floppy-remove">
@@ -45,7 +45,7 @@
 						<!-- TMPL_IF filter-deck --><div class="col-md-12">
 							<div class="alert alert-info" role="alert">
 								<strong><!-- TMPL_VAR filter-deck --></strong>
-								<a href="/" class="btn-xs btn-default"
+								<a href="./" class="btn-xs btn-default"
 									id="filter_reset">
 									<span class="glyphicon glyphicon-refresh">
 									</span>
@@ -75,9 +75,9 @@
 			</div>
 		</div>
 		<span id="to-top"><a href="#"><span class="glyphicon glyphicon-menu-up"></span></a></span>
-		<script src="/static/js/jquery.js"></script>
-		<script src="/static/js/bootstrap.min.js"></script>
-		<script src="/static/js/Chart.js"></script>
+		<script src="./static/js/jquery.js"></script>
+		<script src="./static/js/bootstrap.min.js"></script>
+		<script src="./static/js/Chart.js"></script>
 		<!-- TMPL_INCLUDE "./templates/graphs.html" -->
 		<script>
 		$(document).ready(function(){

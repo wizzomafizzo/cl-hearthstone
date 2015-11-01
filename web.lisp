@@ -137,7 +137,8 @@
 	  (let* ((match (get-match *last-added*))
 			 (url-name (do-urlencode:urlencode (lk 'deck match))))
 		(remove-match *last-added*)
-		(hunchentoot:redirect (str "/?deck=" url-name)))))
+		(hunchentoot:redirect (str (lk 'url-prefix *config*)
+								   "/?deck=" url-name)))))
 
 (defun download-matches ()
   (with-http-authentication (hunchentoot:no-cache)
@@ -209,12 +210,15 @@
   (html-template:clear-template-cache)
   (setq hunchentoot:*dispatch-table*
 		(list (hunchentoot:create-folder-dispatcher-and-handler
-			   "/static/" #p"static/")
+			   (str (lk 'url-prefix *config*) "/static/") #p"static/")
 			  (hunchentoot:create-regex-dispatcher
-			   "^/export.json$" 'download-matches)
+			   (str "^" (lk 'url-prefix *config*) "/export.json$")
+			   'download-matches)
 			  (hunchentoot:create-regex-dispatcher
-			   "^/undo$" 'undo-submit)
+			   (str "^" (lk 'url-prefix *config*) "/undo$")
+			   'undo-submit)
 			  (hunchentoot:create-regex-dispatcher
-			   "^/$" 'index-page)))
+			   (str "^" (lk 'url-prefix *config*) "/$")
+			   'index-page)))
   (hunchentoot:start (make-instance 'hunchentoot:easy-acceptor
 									:port (lk 'port *config*))))

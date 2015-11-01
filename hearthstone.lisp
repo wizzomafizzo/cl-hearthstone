@@ -7,7 +7,8 @@
 
 (defvar *config*
   '((db . "hearthstone.db")
-	(port . 8888)
+	(url-prefix . "/hs")
+	(port . 8887)
 	(match-limit . 100)
 	(winrate-tiers . (50 60))
 	(heroes . ("Druid" "Hunter" "Mage"

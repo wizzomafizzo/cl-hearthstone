@@ -1,6 +1,6 @@
 .input-match {
 	text-align: center;
-	background: no-repeat 90% url("/static/hs-table.png");
+	background: no-repeat 90% url("../hs-table.png");
 	background-position: center center;
 	padding: 10px;
 }

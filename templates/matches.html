@@ -10,7 +10,7 @@
 		</thead>
 		<tbody>
 			<!-- TMPL_LOOP all-matches --><tr>
-				<td class="deck-name"><a href="/?deck=<!-- TMPL_VAR encoded-deck -->" title="<!-- TMPL_VAR type -->" data-toggle="tooltip"><!-- TMPL_VAR escaped-deck --></a></td>
+				<td class="deck-name"><a href="./?deck=<!-- TMPL_VAR encoded-deck -->" title="<!-- TMPL_VAR type -->" data-toggle="tooltip"><!-- TMPL_VAR escaped-deck --></a></td>
 				<td><span title="#<!-- TMPL_VAR id --> - <!-- TMPL_VAR time -->" data-toggle="tooltip"><!-- TMPL_VAR date --></span></td>
 				<td><!-- TMPL_VAR against --></td>
 				<!-- TMPL_IF outcome --><td><span title="<!-- TMPL_VAR notes -->" class="label label-success" data-toggle="tooltip">WIN<!-- TMPL_IF are-notes -->...<!-- /TMPL_IF --></span></td>
