@@ -96,3 +96,8 @@ table td {
 .deck-name {
 	text-align: left;
 }
+
+.undo-alert {
+	margin-left: 1em;
+	margin-right: 1em;
+}

@@ -135,10 +135,15 @@
 (defun undo-submit ()
   (with-http-authentication
 	  (let* ((match (get-match *last-added*))
-			 (url-name (do-urlencode:urlencode (lk 'deck match))))
+			 (deck (lk 'deck match))
+			 (url-name (do-urlencode:urlencode deck))
+			 (vals (list :match-id *last-added*
+						 :match-deck deck
+						 :url-name url-name)))
 		(remove-match *last-added*)
-		(hunchentoot:redirect (str (lk 'url-prefix *config*)
-								   "/?deck=" url-name)))))
+		(with-output-to-string (html-template:*default-template-output*)
+		  (html-template:fill-and-print-template #p"templates/undo.html"
+												 vals)))))
 
 (defun download-matches ()
   (with-http-authentication (hunchentoot:no-cache)
@@ -163,13 +168,15 @@
 			 (not (equal "" (pp "deck")))
 			 (pp "against")
 			 (pp "outcome"))
-		(setq *last-added*
-			  (add-match (pp "type") (pp "deck")
-						 (pp "against") (pp "notes")
-						 (if (equal (pp "outcome") "win") t))))
+		(progn
+		  (setq *last-type* (pp "type"))
+		  (setq *last-added*
+				(add-match (pp "type") (pp "deck")
+						   (pp "against") (pp "notes")
+						   (if (equal (pp "outcome") "win") t)))))
 	(let* ((get-deck (gp "deck"))
 		   (post-deck (pp "deck"))
-		   (type (pp "type"))
+		   (type *last-type*)
 		   (daily-graph (daily-match-stats->template get-deck))
 		   (against-graph (against-stats->template get-deck))
 		   (season (stats-this-season))

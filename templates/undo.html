@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport"
+			content="width=device-width, user-scalable=no, initial-scale=1" />
+		<title>Hearthlisp</title>
+		<link rel="shortcut icon" href="static/favicon.png" type="image/x-icon">
+		<link rel="icon" href="static/favicon.png" type="image/x-icon">
+		<link href="static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="static/css/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="static/css/hearthstone.css" rel="stylesheet">
+	</head>
+	<body>
+		<!-- TMPL_INCLUDE "./templates/navbar.html" -->
+		<div class="container">
+			<div class="main">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="alert alert-info undo-alert" role="alert">
+							Removed match
+							<strong>#<!-- TMPL_VAR match-id --></strong>
+							(<strong><!-- TMPL_VAR match-deck --></strong>)
+							<a href="./?deck=<!-- TMPL_VAR url-name -->" class="btn-xs btn-default"
+								id="filter_reset">
+								<span class="glyphicon glyphicon-ok">
+								</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<span id="to-top"><a href="#"><span class="glyphicon glyphicon-menu-up"></span></a></span>
+		<script src="./static/js/jquery.js"></script>
+		<script src="./static/js/bootstrap.min.js"></script>
+	</body>
+</html>
