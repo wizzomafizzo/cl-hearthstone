@@ -76,9 +76,15 @@
 		  (cons 'losses (- all wins))
 		  (cons 'winrate (winrate wins all)))))
 
-(defun deck-names ()
-  (map 'list #'(lambda (x) (car x))
-	   (db-to-list "select distinct deck from matches order by deck desc")))
+(defun deck-names (&optional days)
+  (let ((start (if days
+				   (- (now) (days-to-secs days))
+				   (- (now) (days-to-secs (lk 'deck-limit *config*))))))
+	(map 'list #'(lambda (x) (car x))
+		 (db-to-list (str "select distinct deck from matches"
+						  " where date between ? and ?"
+						  " order by deck desc")
+					 start (now)))))
 
 (defun all-decks ()
   (let* ((q "select * from matches where deck = ? and outcome = ? ")
@@ -194,10 +200,11 @@
   (let ((stats (against-stats-range from to deck)))
 	(sort (map 'list
 			   #'(lambda (x)
-				   (cons (car x)
-						 (cdr (assoc 'losses (cdr x)))))
+				   (list (car x)
+						 (cdr (assoc 'losses (cdr x)))
+						 (cdr (assoc 'winrate (cdr x)))))
 			   stats)
-		  #'> :key #'cdr)))
+		  #'< :key #'caddr)))
 
 (defun seen-against-range (from to &optional deck)
   (let ((stats (against-stats-range from to deck)))

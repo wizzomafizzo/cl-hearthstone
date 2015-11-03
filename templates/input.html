@@ -15,12 +15,13 @@
 				value="<!-- TMPL_VAR last-deck -->">
 			<div class="versus">VS</div>
 			<select class="form-control" name="against">
-				<!-- TMPL_LOOP heroes --><option><!-- TMPL_VAR hero --></option>
+				<!-- TMPL_LOOP heroes --><option <!-- TMPL_VAR selected -->><!-- TMPL_VAR hero --></option>
 				<!-- /TMPL_LOOP -->
 			</select>
 			<input type="text" class="form-control"
 				placeholder="Notes" name="notes"
-				autocomplete="off">
+				autocomplete="off"
+				value="<!-- TMPL_VAR notes -->">
 			<div class="btn-group">
 				<button class="btn btn-danger outcome"
 					name="outcome"

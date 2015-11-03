@@ -9,12 +9,13 @@
   '((db . "hearthstone.db")
 	(url-prefix . "/hs")
 	(port . 8887)
-	(match-limit . 100)
-	(winrate-tiers . (50 60))
+	(match-limit . 50)
+	(deck-limit . 40) ; days
+	(winrate-tiers . (50 60)) ; percent
 	(heroes . ("Druid" "Hunter" "Mage"
 			   "Paladin" "Priest" "Rogue"
                "Shaman" "Warlock" "Warrior"))
-	(winrate-legend . ((90 . 70) (80 . 83)
+	(winrate-legend . ((90 . 70) (80 . 83) ; winrate . games
 					   (70 . 103) (60 . 140)
 					   (55 . 181) (51 . 243)
 					   (50 . 267) (0 . 1000)))))

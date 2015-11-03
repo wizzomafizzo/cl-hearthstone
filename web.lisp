@@ -98,7 +98,8 @@
 	(map 'list
 		 #'(lambda (x)
 			 (list :hero (car x)
-				   :losses (cdr x)))
+				   :losses (cadr x)
+				   :winrate (caddr x)))
 		 (subseq stats 0 5))))
 
 (defun seen-against->template (&optional deck)
@@ -136,9 +137,17 @@
   (with-http-authentication
 	  (let* ((match (get-match *last-added*))
 			 (deck (lk 'deck match))
+			 (against (lk 'against match))
+			 (notes (lk 'notes match))
 			 (url-name (do-urlencode:urlencode deck))
 			 (vals (list :match-id *last-added*
 						 :match-deck deck
+						 :against (if against
+									  (do-urlencode:urlencode (trim against))
+									  "")
+						 :notes (if notes
+									(do-urlencode:urlencode (trim notes))
+									"")
 						 :url-name url-name)))
 		(remove-match *last-added*)
 		(with-output-to-string (html-template:*default-template-output*)
@@ -178,12 +187,15 @@
 						   (if (equal (pp "outcome") "win") t)))))
 	(let* ((get-deck (if (gp "deck") (trim (gp "deck"))))
 		   (post-deck (if (pp "deck") (trim (pp "deck"))))
+		   (get-against (gp "against"))
+		   (get-notes (gp "notes"))
 		   (active-deck (or post-deck get-deck))
 		   (type *last-type*)
 		   (daily-graph (daily-match-stats->template active-deck))
 		   (against-graph (against-stats->template active-deck))
 		   (season (stats-this-season))
-		   (vals (list :heroes (hero-select nil)
+		   (vals (list :heroes (hero-select get-against)
+					   :notes get-notes
 					   :last-deck active-deck
 					   :last-added *last-added*
 					   :filter-deck (html-template:escape-string active-deck)

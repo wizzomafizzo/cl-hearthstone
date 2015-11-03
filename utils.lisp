@@ -87,3 +87,6 @@
 
 (defun trim (s)
   (string-trim " " s))
+
+(defun days-to-secs (x)
+  (* x 24 60 60))

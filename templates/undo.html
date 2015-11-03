@@ -18,11 +18,12 @@
 			<div class="main">
 				<div class="row">
 					<div class="col-md-12">
-						<div class="alert alert-info undo-alert" role="alert">
+						<div class="alert alert-success undo-alert" role="alert">
 							Removed match
 							<strong>#<!-- TMPL_VAR match-id --></strong>
 							(<strong><!-- TMPL_VAR match-deck --></strong>)
-							<a href="./?deck=<!-- TMPL_VAR url-name -->" class="btn-xs btn-default"
+							<a href="./?deck=<!-- TMPL_VAR url-name -->&against=<!-- TMPL_VAR against -->&notes=<!-- TMPL_VAR notes -->"
+								class="btn-xs btn-default"
 								id="filter_reset">
 								<span class="glyphicon glyphicon-ok">
 								</span>
