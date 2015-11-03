@@ -84,3 +84,6 @@
 
 (defun get-unix-time ()
   (universal-to-unix-time (get-universal-time)))
+
+(defun trim (s)
+  (string-trim " " s))
