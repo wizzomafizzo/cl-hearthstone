@@ -126,13 +126,35 @@
 				   :total (cdr x)))
 		 (subseq stats 0 5))))
 
-(defun type-select (selected)
-  (map 'list
-	   #'(lambda (x)
-		   (list :type x
-				 :selected (if (equal selected x)
-							   "selected")))
-	   *game-types*))
+(defun seen-against-chart->template (&optional deck)
+  (let ((stats (seen-against-week deck)))
+	(map 'list
+		 #'(lambda (x)
+			 (list :hero (car x)
+				   :total (cdr x)
+				   :color (cond
+							((equal (car x) "Druid") "#AD8C3D")
+							((equal (car x) "Hunter") "#34A349")
+							((equal (car x) "Mage") "#74C7E3")
+							((equal (car x) "Paladin") "#E3D052")
+							((equal (car x) "Priest") "#E3E3BF")
+							((equal (car x) "Rogue") "#8C8C8C")
+							((equal (car x) "Shaman") "#0508B5")
+							((equal (car x) "Warlock") "#9A3DBF")
+							((equal (car x) "Warrior") "#E31B29"))))
+		 stats)))
+
+(defun type-select (selected &optional filter)
+  (let* ((default-types (copy-list *game-types*))
+		 (types (if filter
+				   (insert-after default-types 0 "Ranked")
+				   default-types)))
+	(map 'list
+		 #'(lambda (x)
+			 (list :type x
+				   :selected (if (equal selected x)
+								 "selected")))
+		 types)))
 
 (defun hero-select (selected)
   (map 'list
@@ -141,6 +163,17 @@
 				 :selected (if (equal selected x)
 							   "selected")))
 	   (lk 'heroes *config*)))
+
+(defun outcome-select (selected)
+  (let ((default (if (or (not selected) (equal selected ""))
+					 "all" selected)))
+	(map 'list
+		 #'(lambda (x)
+			 (list :name (car x)
+				   :val (cadr x)
+				   :selected (if (equal default (cadr x))
+								 "checked")))
+		 '(("All" "all") ("Wins" "win") ("Losses" "lose")))))
 
 (defun games-until-legend ()
   (let* ((stats (stats-this-season)))
@@ -195,13 +228,18 @@
 			 (against (gp "against"))
 			 (notes (gp "notes"))
 			 (outcome (gp "outcome"))
-			 (vals (list :matches (filter-matches->template from to
-															type deck
-															against
-															notes
-															outcome)
-						 :heroes (hero-select nil)
-						 :game-types (type-select nil))))
+			 (matches (filter-matches->template from to type deck
+												against notes outcome))
+			 (vals (list :matches matches
+						 :heroes (hero-select against)
+						 :types (type-select type t)
+						 :total-results (length matches)
+						 :no-results (< (length matches) 1)
+						 :from (html-template:escape-string from)
+						 :to (html-template:escape-string to)
+						 :deck (html-template:escape-string deck)
+						 :notes (html-template:escape-string notes)
+						 :outcomes (outcome-select outcome))))
 		(with-output-to-string (html-template:*default-template-output*)
 		  (html-template:fill-and-print-template template vals)))))
 
@@ -249,6 +287,7 @@
 					   :against-graph-wins (lk 'wins against-graph)
 					   :against-graph-losses (lk 'losses against-graph)
 					   :against-graph-winrate (lk 'winrate against-graph)
+					   :seen-against-chart (seen-against-chart->template active-deck)
 					   :seen-against (seen-against->template active-deck)
 					   :worst-against (worst-against->template active-deck)
 					   :game-types (type-select type)

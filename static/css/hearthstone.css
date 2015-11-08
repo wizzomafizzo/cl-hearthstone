@@ -65,6 +65,11 @@
 	height: 100% !important;
 }
 
+#against-stats {
+	height: 100% !important;
+	width: 100% !important;
+}
+
 .col-md-12, .col-md-4, .col-md-5, .col-md-3 {
 	padding-left: 4px;
 	padding-right: 4px;
@@ -114,4 +119,8 @@ table td {
 .match-notes {
 	word-wrap: break-word;
 	max-width: 200px;
+}
+
+.no-results {
+	text-align: center;
 }

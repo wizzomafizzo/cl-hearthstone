@@ -59,8 +59,10 @@
 					   (- (net.telent.date:parse-time from) 1)))
 		(to-time (if (or (not to) (equal to "")) (end-of-today)
 					 (+ +one-day+ (net.telent.date:parse-time to) 1)))
-		(type-q (if (or (not type) (equal type "") (equal type "All"))
-					"%" type))
+		(type-q (cond
+				  ((or (not type) (equal type "") (equal type "All")) "%")
+				  ((equal type "Ranked") "Rank %")
+				  (t type)))
 		(deck-q (if (or (not deck) (equal deck ""))
 					"%" (str "%" deck "%")))
 		(against-q (if (or (not against) (equal against "")
@@ -77,9 +79,9 @@
 						  "date between ? and ? and "
 						  "type like ? and deck like ? and "
 						  "against like ? and notes like ? and "
-						  outcome-q " order by date desc")
+						  outcome-q " order by date desc limit ?")
 					 from-time to-time type-q deck-q
-					 against-q notes-q))))
+					 against-q notes-q (lk 'filter-limit *config*)))))
 
 (defun matches-this-season ()
   (map 'list

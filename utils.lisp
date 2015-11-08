@@ -92,3 +92,7 @@
 
 (defun days-to-secs (x)
   (* x 24 60 60))
+
+(defun insert-after (lst index newelt)
+  (push newelt (cdr (nthcdr index lst)))
+  lst)

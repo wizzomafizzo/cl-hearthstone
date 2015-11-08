@@ -10,6 +10,7 @@
 	(url-prefix . "/hs")
 	(port . 8888)
 	(match-limit . 50)
+	(filter-limit . 250)
 	(deck-limit . 40) ; days
 	(winrate-tiers . (50 55)) ; percent
 	(heroes . ("Druid" "Hunter" "Mage"

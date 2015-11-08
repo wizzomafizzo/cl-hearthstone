@@ -17,26 +17,32 @@
 			<div class="main">
 				<div class="col-md-3">
 					<div class="alert alert-info" role="alert">
-						Showing all matches
+						Found <strong><!-- TMPL_VAR total-results --></strong> matches
+						<a href="./matches"
+							class="btn-xs btn-default"
+							id="filter_reset">
+							<span class="glyphicon glyphicon-refresh">
+							</span>
+						</a>
 					</div>
 					<div class="well">
 						<form method="get" action="./matches">
 							<div class="form-group">
 								<label>Range</label>
-								<input type="text" class="form-control date-picker" name="from" placeholder="From">
-								<input type="text" class="form-control date-picker" name="to" placeholder="To">
+								<input type="text" class="form-control date-picker" name="from" placeholder="From" value="<!-- TMPL_VAR from -->">
+								<input type="text" class="form-control date-picker" name="to" placeholder="To" value="<!-- TMPL_VAR to -->">
 							</div>
 							<div class="form-group">
 								<label for="type">Type</label>
 								<select class="form-control" name="type">
 									<option>All</option>
-									<!-- TMPL_LOOP game-types --><option <!-- TMPL_VAR selected -->><!-- TMPL_VAR type --></option>
+									<!-- TMPL_LOOP types --><option <!-- TMPL_VAR selected -->><!-- TMPL_VAR type --></option>
 									<!-- /TMPL_LOOP -->
 								</select>
 							</div>
 							<div class="form-group">
 								<label for="deck">Deck</label>
-								<input type="text" class="form-control" name="deck">
+								<input type="text" class="form-control" name="deck" value="<!-- TMPL_VAR deck -->">
 							</div>
 							<div class="form-group">
 								<label for="against">Against</label>
@@ -48,19 +54,15 @@
 							</div>
 							<div class="form-group">
 								<label for="notes">Notes</label>
-								<input type="text" class="form-control" name="notes">
+								<input type="text" class="form-control" name="notes" value="<!-- TMPL_VAR notes -->">
 							</div>
 							<div class="form-group">
 								<label for="outome">Outcome</label><br>
+								<!-- TMPL_LOOP outcomes -->
 								<label class="radio-inline">
-									<input type="radio" name="outcome" value="any" checked> All
+									<input type="radio" name="outcome" value="<!-- TMPL_VAR val -->" <!-- TMPL_VAR selected -->> <!-- TMPL_VAR name -->
 								</label>
-								<label class="radio-inline">
-									<input type="radio" name="outcome" value="win"> Wins
-								</label>
-								<label class="radio-inline">
-									<input type="radio" name="outcome" value="lose"> Losses
-								</label>
+								<!-- /TMPL_LOOP -->
 							</div>
 							<div class="form-group">
 								<button type="submit" class="btn btn-default search-button">Search</button>
@@ -70,6 +72,11 @@
 				</div>
 				<div class="col-md-9">
 					<div class="well filter-matches-table">
+						<!-- TMPL_IF no-results -->
+						<div class="no-results">
+							<strong>No matches found</strong>
+						</div>
+						<!-- TMPL_ELSE -->
 						<table class="table table-condensed">
 							<thead>
 								<tr>
@@ -97,6 +104,7 @@
 								<!-- /TMPL_LOOP -->
 							</tbody>
 						</table>
+						<!-- /TMPL_IF -->
 					</div>
 				</div>
 			</div>

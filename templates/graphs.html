@@ -78,4 +78,16 @@ var hero_data = {
 };
 var hero_ctx = document.getElementById("hero-stats").getContext("2d");
 var hero_winrate_stats = new Chart(hero_ctx).Bar(hero_data);
+
+var against_data = [
+	<!-- TMPL_LOOP seen-against-chart -->
+	{
+		value: "<!-- TMPL_VAR total -->",
+		color: "<!-- TMPL_VAR color -->",
+		label: "<!-- TMPL_VAR hero -->"
+	},
+	<!-- /TMPL_LOOP -->
+];
+var against_ctx = document.getElementById("against-stats").getContext("2d");
+var against_seen = new Chart(against_ctx).Pie(against_data);
 </script>
