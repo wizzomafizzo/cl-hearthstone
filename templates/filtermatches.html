@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Hearthlisp</title>
+		<link rel="shortcut icon" href="static/favicon.png" type="image/x-icon">
+		<link rel="icon" href="static/favicon.png" type="image/x-icon">
+		<link href="static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="static/css/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="static/css/jquery-ui.min.css" rel="stylesheet">
+		<link href="static/css/hearthstone.css" rel="stylesheet">
+	</head>
+	<body>
+		<!-- TMPL_INCLUDE "./templates/navbar.html" -->
+		<div class="container">
+			<div class="main">
+				<div class="col-md-3">
+					<div class="alert alert-info" role="alert">
+						Showing all matches
+					</div>
+					<div class="well">
+						<form method="get" action="./matches">
+							<div class="form-group">
+								<label>Range</label>
+								<input type="text" class="form-control date-picker" name="from" placeholder="From">
+								<input type="text" class="form-control date-picker" name="to" placeholder="To">
+							</div>
+							<div class="form-group">
+								<label for="type">Type</label>
+								<select class="form-control" name="type">
+									<option>All</option>
+									<!-- TMPL_LOOP game-types --><option <!-- TMPL_VAR selected -->><!-- TMPL_VAR type --></option>
+									<!-- /TMPL_LOOP -->
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="deck">Deck</label>
+								<input type="text" class="form-control" name="deck">
+							</div>
+							<div class="form-group">
+								<label for="against">Against</label>
+								<select class="form-control" name="against">
+									<option>All</option>
+									<!-- TMPL_LOOP heroes --><option <!-- TMPL_VAR selected -->><!-- TMPL_VAR hero --></option>
+									<!-- /TMPL_LOOP -->
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="notes">Notes</label>
+								<input type="text" class="form-control" name="notes">
+							</div>
+							<div class="form-group">
+								<label for="outome">Outcome</label><br>
+								<label class="radio-inline">
+									<input type="radio" name="outcome" value="any" checked> All
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="outcome" value="win"> Wins
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="outcome" value="lose"> Losses
+								</label>
+							</div>
+							<div class="form-group">
+								<button type="submit" class="btn btn-default search-button">Search</button>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="col-md-9">
+					<div class="well filter-matches-table">
+						<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th></th>
+									<th><span class="glyphicon glyphicon-calendar" title="Date" data-toggle="tooltip"></span></th>
+									<th><span class="glyphicon glyphicon-star" title="Mode" data-toggle="tooltip"></span></th>
+									<th><span class="glyphicon glyphicon-align-justify" title="Deck" data-toggle="tooltip"></span></th>
+									<th><span class="glyphicon glyphicon-screenshot" title="Against" data-toggle="tooltip"></span></th>
+									<th><span class="glyphicon glyphicon-pencil" title="Notes" data-toggle="tooltip"></span></th>
+									<th><span class="glyphicon glyphicon-flag" title="Outcome" data-toggle="tooltip"></span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- TMPL_LOOP matches --><tr>
+								<td><strong>#<!-- TMPL_VAR id --></strong></td>
+								<td><!-- TMPL_VAR date --> <!-- TMPL_VAR time --></td>
+								<td><!-- TMPL_VAR type --></td>
+								<td><!-- TMPL_VAR escaped-deck --></td>
+								<td><!-- TMPL_VAR against --></td>
+								<td class="match-notes"><!-- TMPL_VAR notes --></td>
+								<!-- TMPL_IF outcome --><td><span class="label label-success">WIN</span></td>
+								<!-- TMPL_ELSE --><td><span class="label label-danger">LOSE</span></td>
+								<!-- /TMPL_IF -->
+								</tr>
+								<!-- /TMPL_LOOP -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<span id="to-top"><a href="#"><span class="glyphicon glyphicon-menu-up"></span></a></span>
+		<script src="./static/js/jquery.js"></script>
+		<script src="./static/js/jquery-ui.min.js"></script>
+		<script src="./static/js/bootstrap.min.js"></script>
+		<script>
+		$(document).ready(function(){
+			$('[data-toggle="tooltip"]').tooltip();
+			$(".date-picker").datepicker({
+				dateFormat: "yy-mm-dd",
+				showAnim: "slideDown"
+			});
+		});
+		</script>
+	</body>
+</html>

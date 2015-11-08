@@ -5,7 +5,7 @@
 	padding: 10px;
 }
 
-.form-group {
+.form-group-match {
 	margin-bottom: 0;
 }
 
@@ -100,4 +100,18 @@ table td {
 .undo-alert {
 	margin-left: 1em;
 	margin-right: 1em;
+}
+
+.filter-matches-table {
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+.search-button {
+	width: 100%;
+}
+
+.match-notes {
+	word-wrap: break-word;
+	max-width: 200px;
 }

@@ -3,6 +3,8 @@
 (defvar *unix-epoch-difference*
   (encode-universal-time 0 0 0 1 1 1970 0))
 
+(defvar +one-day+ (* 60 60 24))
+
 (defun str (&rest strings)
   (apply #'concatenate 'string strings))
 

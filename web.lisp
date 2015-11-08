@@ -30,9 +30,10 @@
 				   :winrate (lk 'winrate (cdr x))))
 		 decks)))
 
-(defun all-matches->template (&optional deck)
-  (let ((matches (all-matches deck)))
+(defun all-matches->template (&optional deck limit)
+  (let ((matches (all-matches deck limit)))
 	(map 'list
+		 ;; TODO: ESCAPE THIS STUFF
 		 #'(lambda (x)
 			 (list :date (human-date (lk 'date x))
 				   :time (human-time (lk 'date x))
@@ -43,6 +44,21 @@
 				   :against (lk 'against x)
 				   :notes (lk 'notes x)
 				   :are-notes (not (equal (lk 'notes x) ""))
+				   :outcome (lk 'outcome x)
+				   :id (lk 'id x)))
+		 matches)))
+
+(defun filter-matches->template (from to type deck against notes outcome)
+  (let ((matches (filter-matches from to type deck against notes outcome)))
+	(map 'list
+		 #'(lambda (x)
+			 (list :date (human-date (lk 'date x))
+				   :time (human-time (lk 'date x))
+				   :type (html-template:escape-string (lk 'type x))
+				   :deck (html-template:escape-string (lk 'deck x))
+				   :escaped-deck (html-template:escape-string (lk 'deck x))
+				   :against (html-template:escape-string (lk 'against x))
+				   :notes (html-template:escape-string (lk 'notes x))
 				   :outcome (lk 'outcome x)
 				   :id (lk 'id x)))
 		 matches)))
@@ -133,6 +149,16 @@
 					  collect x)))
 	   (lk 'total stats))))
 
+(defun average-length ()
+  (let ((len (average-match-length (reverse (matches-this-season)))))
+	(float (round-to (/ len 60) 1))))
+
+(defun time-to-legend ()
+  (float (round-to (/ (* (games-until-legend)
+						 (average-length))
+					  60)
+				   1)))
+
 (defun undo-submit ()
   (with-http-authentication
 	  (let* ((match (get-match *last-added*))
@@ -159,15 +185,25 @@
 	(setf (hunchentoot:content-type*) "application/json")
 	(jsown:to-json (export-matches))))
 
-(defun average-length ()
-  (let ((len (average-match-length (reverse (matches-this-season)))))
-	(float (round-to (/ len 60) 1))))
-
-(defun time-to-legend ()
-  (float (round-to (/ (* (games-until-legend)
-						 (average-length))
-					  60)
-				   1)))
+(defun matches-page ()
+  (with-http-authentication
+	  (let* ((template #p"templates/filtermatches.html")
+			 (from (gp "from"))
+			 (to (gp "to"))
+			 (type (gp "type"))
+			 (deck (gp "deck"))
+			 (against (gp "against"))
+			 (notes (gp "notes"))
+			 (outcome (gp "outcome"))
+			 (vals (list :matches (filter-matches->template from to
+															type deck
+															against
+															notes
+															outcome)
+						 :heroes (hero-select nil)
+						 :game-types (type-select nil))))
+		(with-output-to-string (html-template:*default-template-output*)
+		  (html-template:fill-and-print-template template vals)))))
 
 (defun index-page ()
   (with-http-authentication (hunchentoot:no-cache)
@@ -194,15 +230,17 @@
 		   (daily-graph (daily-match-stats->template active-deck))
 		   (against-graph (against-stats->template active-deck))
 		   (season (stats-this-season))
+		   (last-matches (all-matches->template active-deck
+												(lk 'match-limit *config*)))
 		   (vals (list :heroes (hero-select get-against)
-					   :notes get-notes
+					   :notes (html-template:escape-string get-notes)
 					   :last-deck active-deck
 					   :last-added *last-added*
 					   :filter-deck (html-template:escape-string active-deck)
 					   :encoded-deck (do-urlencode:urlencode active-deck)
 					   :all-match-stats (all-match-stats->template active-deck)
 					   :all-decks (all-decks->template)
-					   :all-matches (all-matches->template active-deck)
+					   :all-matches last-matches
 					   :daily-graph-labels (lk 'labels daily-graph)
 					   :daily-graph-wins (lk 'wins daily-graph)
 					   :daily-graph-losses (lk 'losses daily-graph)
@@ -239,6 +277,9 @@
 			  (hunchentoot:create-regex-dispatcher
 			   (str "^" (lk 'url-prefix *config*) "/undo$")
 			   'undo-submit)
+			  (hunchentoot:create-regex-dispatcher
+			   (str "^" (lk 'url-prefix *config*) "/matches$")
+			   'matches-page)
 			  (hunchentoot:create-regex-dispatcher
 			   (str "^" (lk 'url-prefix *config*) "/$")
 			   'index-page)))

@@ -4,6 +4,7 @@
 (ql:quickload "html-template")
 (ql:quickload "jsown")
 (ql:quickload "do-urlencode")
+(ql:quickload "net-telent-date")
 
 (defpackage :hearthstone
   (:use :cl))

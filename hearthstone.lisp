@@ -8,10 +8,10 @@
 (defvar *config*
   '((db . "hearthstone.db")
 	(url-prefix . "/hs")
-	(port . 8887)
+	(port . 8888)
 	(match-limit . 50)
 	(deck-limit . 40) ; days
-	(winrate-tiers . (50 60)) ; percent
+	(winrate-tiers . (50 55)) ; percent
 	(heroes . ("Druid" "Hunter" "Mage"
 			   "Paladin" "Priest" "Rogue"
                "Shaman" "Warlock" "Warrior"))

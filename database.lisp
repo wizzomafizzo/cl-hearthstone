@@ -43,15 +43,43 @@
   (let ((q "select rowid,* from matches where rowid = ?"))
 	(read-match (car (db-to-list q id)))))
 
-(defun all-matches (&optional deck)
-  (let ((results (if deck
-					 (db-to-list (str "select rowid,* from matches where"
-									  " deck = ? order by date desc limit ?")
-								 deck (lk 'match-limit *config*))
-					 (db-to-list (str "select rowid,* from matches"
-									  " order by date desc limit ?")
-								 (lk 'match-limit *config*)))))
+(defun all-matches (&optional deck limit)
+  (let* ((limit (if limit limit -1))
+		 (results (if deck
+					  (db-to-list (str "select rowid,* from matches where"
+									   " deck = ? order by date desc limit ?")
+								  deck limit)
+					  (db-to-list (str "select rowid,* from matches"
+									   " order by date desc limit ?")
+								  limit))))
 	(map 'list #'read-match results)))
+
+(defun filter-matches (from to type deck against notes outcome)
+  (let ((from-time (if (or (not from) (equal from "")) 0
+					   (- (net.telent.date:parse-time from) 1)))
+		(to-time (if (or (not to) (equal to "")) (end-of-today)
+					 (+ +one-day+ (net.telent.date:parse-time to) 1)))
+		(type-q (if (or (not type) (equal type "") (equal type "All"))
+					"%" type))
+		(deck-q (if (or (not deck) (equal deck ""))
+					"%" (str "%" deck "%")))
+		(against-q (if (or (not against) (equal against "")
+						   (equal against "All"))
+					   "%" (str "%" against "%")))
+		(notes-q (if (or (not notes) (equal notes ""))
+					 "%" (str "%" notes "%")))
+		(outcome-q (cond
+					 ((equal outcome "win") "outcome = 1")
+					 ((equal outcome "lose") "outcome = 0")
+					 (t "(outcome = 0 or outcome = 1)"))))
+	(map 'list #'read-match
+		 (db-to-list (str "select rowid,* from matches where "
+						  "date between ? and ? and "
+						  "type like ? and deck like ? and "
+						  "against like ? and notes like ? and "
+						  outcome-q " order by date desc")
+					 from-time to-time type-q deck-q
+					 against-q notes-q))))
 
 (defun matches-this-season ()
   (map 'list
