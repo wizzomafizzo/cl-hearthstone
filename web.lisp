@@ -22,7 +22,6 @@
 		 #'(lambda (x)
 			 (list :name (car x)
 				   :encoded-name (do-urlencode:urlencode (car x))
-				   :escaped-name (html-template:escape-string (car x))
 				   :wins (lk 'wins (cdr x))
 				   :losses (lk 'losses (cdr x))
 				   :total (lk 'total (cdr x))
@@ -33,14 +32,12 @@
 (defun all-matches->template (&optional deck limit)
   (let ((matches (all-matches deck limit)))
 	(map 'list
-		 ;; TODO: ESCAPE THIS STUFF
 		 #'(lambda (x)
 			 (list :date (human-date (lk 'date x))
 				   :time (human-time (lk 'date x))
 				   :type (lk 'type x)
 				   :deck (lk 'deck x)
 				   :encoded-deck (do-urlencode:urlencode (lk 'deck x))
-				   :escaped-deck (html-template:escape-string (lk 'deck x))
 				   :against (lk 'against x)
 				   :notes (lk 'notes x)
 				   :are-notes (not (equal (lk 'notes x) ""))
@@ -54,11 +51,10 @@
 		 #'(lambda (x)
 			 (list :date (human-date (lk 'date x))
 				   :time (human-time (lk 'date x))
-				   :type (html-template:escape-string (lk 'type x))
-				   :deck (html-template:escape-string (lk 'deck x))
-				   :escaped-deck (html-template:escape-string (lk 'deck x))
-				   :against (html-template:escape-string (lk 'against x))
-				   :notes (html-template:escape-string (lk 'notes x))
+				   :type (lk 'type x)
+				   :deck (lk 'deck x)
+				   :against (lk 'against x)
+				   :notes (lk 'notes x)
 				   :outcome (lk 'outcome x)
 				   :id (lk 'id x)))
 		 matches)))
@@ -198,16 +194,14 @@
 			 (deck (lk 'deck match))
 			 (against (lk 'against match))
 			 (notes (lk 'notes match))
-			 (url-name (do-urlencode:urlencode deck))
+			 (url-deck (do-urlencode:urlencode deck))
+			 (url-against (do-urlencode:urlencode against))
+			 (url-notes (do-urlencode:urlencode notes))
 			 (vals (list :match-id *last-added*
 						 :match-deck deck
-						 :against (if against
-									  (do-urlencode:urlencode (trim against))
-									  "")
-						 :notes (if notes
-									(do-urlencode:urlencode (trim notes))
-									"")
-						 :url-name url-name)))
+						 :url-against (if against url-against "")
+						 :url-notes (if notes url-notes "")
+						 :url-deck (if deck url-deck ""))))
 		(remove-match *last-added*)
 		(with-output-to-string (html-template:*default-template-output*)
 		  (html-template:fill-and-print-template #p"templates/undo.html"
@@ -235,10 +229,10 @@
 						 :types (type-select type t)
 						 :total-results (length matches)
 						 :no-results (< (length matches) 1)
-						 :from (html-template:escape-string from)
-						 :to (html-template:escape-string to)
-						 :deck (html-template:escape-string deck)
-						 :notes (html-template:escape-string notes)
+						 :from from
+						 :to to
+						 :deck deck
+						 :notes notes
 						 :outcomes (outcome-select outcome))))
 		(with-output-to-string (html-template:*default-template-output*)
 		  (html-template:fill-and-print-template template vals)))))
@@ -263,7 +257,8 @@
 		   (post-deck (if (pp "deck") (trim (pp "deck"))))
 		   (get-against (gp "against"))
 		   (get-notes (gp "notes"))
-		   (active-deck (or post-deck get-deck))
+		   (active-deck (let ((deck (or post-deck get-deck)))
+						  (if (and deck (not (equal deck ""))) deck)))
 		   (type *last-type*)
 		   (daily-graph (daily-match-stats->template active-deck))
 		   (against-graph (against-stats->template active-deck))
@@ -271,10 +266,10 @@
 		   (last-matches (all-matches->template active-deck
 												(lk 'match-limit *config*)))
 		   (vals (list :heroes (hero-select get-against)
-					   :notes (html-template:escape-string get-notes)
+					   :notes get-notes
 					   :last-deck active-deck
 					   :last-added *last-added*
-					   :filter-deck (html-template:escape-string active-deck)
+					   :filter-deck active-deck
 					   :encoded-deck (do-urlencode:urlencode active-deck)
 					   :all-match-stats (all-match-stats->template active-deck)
 					   :all-decks (all-decks->template)
