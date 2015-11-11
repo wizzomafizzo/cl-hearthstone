@@ -45,6 +45,9 @@
 (defun a-week-ago ()
   (- (now) (* 60 60 24 7)))
 
+(defun a-month-ago () ; approximately
+  (- (now) (* 60 60 24 31)))
+
 (defun start-of-month ()
   (let ((date (subseq (multiple-value-list (get-decoded-time)) 0 6)))
 	(setf (nth 3 date) 1)

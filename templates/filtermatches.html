@@ -17,7 +17,11 @@
 			<div class="main">
 				<div class="col-md-3">
 					<div class="alert alert-info" role="alert">
-						Found <strong><!-- TMPL_VAR total-results --></strong> matches
+						<strong><!-- TMPL_VAR total-results --></strong> matches
+						<!-- TMPL_IF not-hundred-percent -->
+						(<!-- TMPL_VAR percent-results -->%
+						of <!-- TMPL_VAR total-in-range -->)
+						<!-- /TMPL_IF -->
 						<a href="./matches"
 							class="btn-xs btn-default"
 							id="filter_reset">
@@ -42,7 +46,7 @@
 							</div>
 							<div class="form-group">
 								<label for="deck">Deck</label>
-								<input type="text" class="form-control" name="deck" value="<!-- TMPL_VAR deck -->">
+								<input id="deck-input" type="text" class="form-control" name="deck" value="<!-- TMPL_VAR deck -->">
 							</div>
 							<div class="form-group">
 								<label for="against">Against</label>
@@ -74,7 +78,7 @@
 					<div class="well filter-matches-table">
 						<!-- TMPL_IF no-results -->
 						<div class="no-results">
-							<strong>No matches found</strong>
+							<strong>No matches found.</strong>
 						</div>
 						<!-- TMPL_ELSE -->
 						<table class="table table-condensed">
@@ -94,7 +98,7 @@
 								<td><strong>#<!-- TMPL_VAR id --></strong></td>
 								<td><!-- TMPL_VAR date --> <!-- TMPL_VAR time --></td>
 								<td><!-- TMPL_VAR type --></td>
-								<td><!-- TMPL_VAR deck --></td>
+								<td onclick="fd('<!-- TMPL_VAR deck -->')"><!-- TMPL_VAR deck --></td>
 								<td><!-- TMPL_VAR against --></td>
 								<td class="match-notes"><!-- TMPL_VAR notes --></td>
 								<!-- TMPL_IF outcome --><td><span class="label label-success">WIN</span></td>
@@ -109,7 +113,6 @@
 				</div>
 			</div>
 		</div>
-		<span id="to-top"><a href="#"><span class="glyphicon glyphicon-menu-up"></span></a></span>
 		<script src="./static/js/jquery.js"></script>
 		<script src="./static/js/jquery-ui.min.js"></script>
 		<script src="./static/js/bootstrap.min.js"></script>
@@ -121,6 +124,9 @@
 				showAnim: "slideDown"
 			});
 		});
+		function fd(name) {
+			$("#deck-input").val(name)
+		}
 		</script>
 	</body>
 </html>

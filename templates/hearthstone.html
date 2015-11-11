@@ -25,6 +25,9 @@
 							<div class="alert alert-success" role="alert">
 								Added match
 								<strong>#<!-- TMPL_VAR last-added --></strong>
+								<!-- TMPL_IF new-deck -->
+								<em>New deck!</em>
+								<!-- /TMPL_IF -->
 								<a href="./undo" class="btn-xs btn-default"
 									id="filter_reset"
 									title="Undo" data-toggle="tooltip">
@@ -57,14 +60,17 @@
 <!-- TMPL_INCLUDE "./templates/stats.html" -->
 						</div>
 						<div class="col-md-12">
-							<div class="well"><canvas title="Daily Stats - Week" data-toggle="tooltip" id="winrate-stats"></canvas></div>
+							<div class="well"><canvas title="Daily Stats - Fortnight" data-toggle="tooltip" id="winrate-stats"></canvas></div>
 						</div>
 						<div class="col-md-12">
 							<div class="well"><canvas title="Against Stats - Month" data-toggle="tooltip" id="hero-stats"></canvas></div>
 						</div>
+						<!-- TMPL_IF no-results -->
+						<!-- TMPL_ELSE -->
 						<div class="col-md-12">
-							<div class="well"><canvas title="Against Seen - Week" data-toggle="tooltip" id="against-stats"></canvas></div>
+							<div class="well"><canvas title="Against Seen - Month" data-toggle="tooltip" id="against-stats"></canvas></div>
 						</div>
+						<!-- /TMPL_IF -->
 						<div class="col-md-12">
 <!-- TMPL_INCLUDE "./templates/againststats.html" -->
 						</div>
@@ -77,7 +83,7 @@
 				</div>
 			</div>
 		</div>
-		<span id="to-top"><a href="#"><span class="glyphicon glyphicon-menu-up"></span></a></span>
+		<!-- <span id="to-top"><a href="#"><span class="glyphicon glyphicon-menu-up"></span></a></span> -->
 		<script src="./static/js/jquery.js"></script>
 		<script src="./static/js/bootstrap.min.js"></script>
 		<script src="./static/js/Chart.js"></script>

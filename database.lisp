@@ -54,6 +54,14 @@
 								  limit))))
 	(map 'list #'read-match results)))
 
+(defun count-filter-matches (from to)
+  (let ((from-time (if (or (not from) (equal from "")) 0
+					   (- (net.telent.date:parse-time from) 1)))
+		(to-time (if (or (not to) (equal to "")) (end-of-today)
+					 (+ +one-day+ (net.telent.date:parse-time to) 1))))
+	(db-single "select count(*) from matches where date between ? and ?"
+			   from-time to-time)))
+
 (defun filter-matches (from to type deck against notes outcome)
   (let ((from-time (if (or (not from) (equal from "")) 0
 					   (- (net.telent.date:parse-time from) 1)))
@@ -137,6 +145,9 @@
 (defun remove-deck (name)
   (db-non-query "delete from matches where deck = ?" name))
 
+(defun count-deck (name)
+  (db-single "select count(*) from matches where deck = ?" name))
+
 (defun match-stats-range (from to &optional deck)
   (let ((qs (if deck
 				(list (str "select * from matches where"
@@ -164,7 +175,7 @@
   (let ((args (if deck (list (now) deck) (list (now)))))
 	(list (cons 'today (apply #'match-stats-range (start-of-today) args))
 		  (cons 'week (apply #'match-stats-range (a-week-ago) args))
-		  (cons 'season (apply #'match-stats-range (start-of-month) args))
+		  (cons 'month (apply #'match-stats-range (a-month-ago) args))
 		  (cons 'overall (apply #'match-stats-range 0 args)))))
 
 (defun daily-match-stats (days-back &optional deck)
@@ -198,6 +209,9 @@
 
 (defun daily-match-stats-week (&optional deck)
   (reverse (daily-match-stats 7 deck)))
+
+(defun daily-match-stats-fortnight (&optional deck)
+  (reverse (daily-match-stats 14 deck)))
 
 (defun against-stats-range (from to &optional deck)
   (let ((heroes (lk 'heroes *config*))
@@ -249,11 +263,20 @@
 (defun worst-against-week (&optional deck)
   (worst-against-range (a-week-ago) (now) deck))
 
+(defun worst-against-month (&optional deck)
+  (worst-against-range (a-month-ago) (now) deck))
+
 (defun seen-against-week (&optional deck)
   (seen-against-range (a-week-ago) (now) deck))
 
+(defun seen-against-month (&optional deck)
+  (seen-against-range (a-month-ago) (now) deck))
+
 (defun against-stats-week (&optional deck)
-  (against-stats-range (- (now) (* 60 60 24 7)) (now) deck))
+  (against-stats-range (a-week-ago) (now) deck))
+
+(defun against-stats-month (&optional deck)
+  (against-stats-range (a-month-ago) (now) deck))
 
 (defun against-stats-season (&optional deck)
   (against-stats-range (start-of-month) (now) deck))

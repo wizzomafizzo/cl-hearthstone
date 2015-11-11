@@ -1,4 +1,9 @@
 <div class="well">
+	<!-- TMPL_IF no-results -->
+	<div class="no-results">
+		<strong>No matches found.</strong>
+	</div>
+	<!-- TMPL_ELSE -->
 	<table class="table table-condensed">
 		<thead>
 			<tr>
@@ -20,4 +25,5 @@
 			<!-- /TMPL_LOOP -->
 		</tbody>
 	</table>
+	<!-- /TMPL_IF -->
 </div>

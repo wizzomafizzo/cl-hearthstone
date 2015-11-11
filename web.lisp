@@ -65,7 +65,7 @@
 		 #'(lambda (x)
 			 (list :name (cond ((eq (car x) 'today) "Today")
 							   ((eq (car x) 'week) "Week")
-							   ((eq (car x) 'season) "Month")
+							   ((eq (car x) 'month) "Month")
 							   ((eq (car x) 'overall) "Overall"))
 				   :wins (lk 'wins (cdr x))
 				   :losses (lk 'losses (cdr x))
@@ -75,7 +75,7 @@
 		 stats)))
 
 (defun daily-match-stats->template (&optional deck)
-  (let ((stats (daily-match-stats-week deck)))
+  (let ((stats (daily-match-stats-fortnight deck)))
 	(list (cons 'labels (format nil "~{~A~^,~}"
 								(map 'list
 									 #'(lambda (x) (human-date (lk 'date x)))
@@ -91,7 +91,7 @@
 											 stats))))))
 
 (defun against-stats->template (&optional deck)
-  (let ((stats (against-stats-season deck)))
+  (let ((stats (against-stats-month deck)))
 	(list (cons 'labels
 				(format nil "~{~A~^,~}"
 						(map 'list #'(lambda (x) (car x))stats)))
@@ -106,7 +106,7 @@
 				 (map 'list #'(lambda (x) (lk 'winrate (cdr x))) stats))))))
 
 (defun worst-against->template (&optional deck)
-  (let ((stats (worst-against-week deck)))
+  (let ((stats (worst-against-month deck)))
 	(map 'list
 		 #'(lambda (x)
 			 (list :hero (car x)
@@ -115,7 +115,7 @@
 		 (subseq stats 0 5))))
 
 (defun seen-against->template (&optional deck)
-  (let ((stats (seen-against-week deck)))
+  (let ((stats (seen-against-month deck)))
 	(map 'list
 		 #'(lambda (x)
 			 (list :hero (car x)
@@ -123,7 +123,7 @@
 		 (subseq stats 0 5))))
 
 (defun seen-against-chart->template (&optional deck)
-  (let ((stats (seen-against-week deck)))
+  (let ((stats (seen-against-month deck)))
 	(map 'list
 		 #'(lambda (x)
 			 (list :hero (car x)
@@ -190,19 +190,19 @@
 
 (defun undo-submit ()
   (with-http-authentication
-	  (let* ((match (get-match *last-added*))
+	  (let* ((match (get-match (car *last-added*)))
 			 (deck (lk 'deck match))
 			 (against (lk 'against match))
 			 (notes (lk 'notes match))
 			 (url-deck (do-urlencode:urlencode deck))
 			 (url-against (do-urlencode:urlencode against))
 			 (url-notes (do-urlencode:urlencode notes))
-			 (vals (list :match-id *last-added*
+			 (vals (list :match-id (car *last-added*)
 						 :match-deck deck
 						 :url-against (if against url-against "")
 						 :url-notes (if notes url-notes "")
 						 :url-deck (if deck url-deck ""))))
-		(remove-match *last-added*)
+		(remove-match (car *last-added*))
 		(with-output-to-string (html-template:*default-template-output*)
 		  (html-template:fill-and-print-template #p"templates/undo.html"
 												 vals)))))
@@ -222,6 +222,7 @@
 			 (against (gp "against"))
 			 (notes (gp "notes"))
 			 (outcome (gp "outcome"))
+			 (total-in-range (count-filter-matches from to))
 			 (matches (filter-matches->template from to type deck
 												against notes outcome))
 			 (vals (list :matches matches
@@ -229,11 +230,23 @@
 						 :types (type-select type t)
 						 :total-results (length matches)
 						 :no-results (< (length matches) 1)
+						 :percent-results (winrate (length matches)
+												   total-in-range)
+						 :total-in-range total-in-range
+						 :not-hundred-percent (not (= total-in-range
+													  (length matches)))
 						 :from from
 						 :to to
 						 :deck deck
 						 :notes notes
 						 :outcomes (outcome-select outcome))))
+		(with-output-to-string (html-template:*default-template-output*)
+		  (html-template:fill-and-print-template template vals)))))
+
+(defun stats-page ()
+  (with-http-authentication
+	  (let* ((template #p"templates/detailedstats.html")
+			 (vals (list :matches nil)))
 		(with-output-to-string (html-template:*default-template-output*)
 		  (html-template:fill-and-print-template template vals)))))
 
@@ -248,11 +261,12 @@
 		(progn
 		  (setq *last-type* (pp "type"))
 		  (setq *last-added*
-				(add-match (pp "type")
-						   (trim (pp "deck"))
-						   (pp "against")
-						   (trim (pp "notes"))
-						   (if (equal (pp "outcome") "win") t)))))
+				(cons (add-match (pp "type")
+								 (trim (pp "deck"))
+								 (pp "against")
+								 (trim (pp "notes"))
+								 (if (equal (pp "outcome") "win") t))
+					  (count-deck (trim (pp "deck")))))))
 	(let* ((get-deck (if (gp "deck") (trim (gp "deck"))))
 		   (post-deck (if (pp "deck") (trim (pp "deck"))))
 		   (get-against (gp "against"))
@@ -268,7 +282,9 @@
 		   (vals (list :heroes (hero-select get-against)
 					   :notes get-notes
 					   :last-deck active-deck
-					   :last-added *last-added*
+					   :last-added (car *last-added*)
+					   :no-results (< (length last-matches) 1)
+					   :new-deck (if *last-added* (< (cdr *last-added*) 2))
 					   :filter-deck active-deck
 					   :encoded-deck (do-urlencode:urlencode active-deck)
 					   :all-match-stats (all-match-stats->template active-deck)
