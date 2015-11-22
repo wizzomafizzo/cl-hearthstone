@@ -190,19 +190,20 @@
 
 (defun undo-submit ()
   (with-http-authentication
-	  (let* ((match (get-match (car *last-added*)))
+	  (let* ((match-id (car *last-added*))
+			 (match (if match-id (get-match match-id)))
 			 (deck (lk 'deck match))
 			 (against (lk 'against match))
 			 (notes (lk 'notes match))
 			 (url-deck (do-urlencode:urlencode deck))
 			 (url-against (do-urlencode:urlencode against))
 			 (url-notes (do-urlencode:urlencode notes))
-			 (vals (list :match-id (car *last-added*)
+			 (vals (list :match-id match-id
 						 :match-deck deck
 						 :url-against (if against url-against "")
 						 :url-notes (if notes url-notes "")
 						 :url-deck (if deck url-deck ""))))
-		(remove-match (car *last-added*))
+		(if match-id (remove-match match-id))
 		(with-output-to-string (html-template:*default-template-output*)
 		  (html-template:fill-and-print-template #p"templates/undo.html"
 												 vals)))))

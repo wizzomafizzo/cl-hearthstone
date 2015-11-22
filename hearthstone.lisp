@@ -9,7 +9,7 @@
   '((db . "hearthstone.db")
 	(url-prefix . "/hs")
 	(port . 8888)
-	(match-limit . 50)
+	(match-limit . 40)
 	(filter-limit . 250)
 	(deck-limit . 60) ; days
 	(winrate-tiers . (50 55)) ; percent

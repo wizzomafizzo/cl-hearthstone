@@ -59,8 +59,8 @@
 					   (- (net.telent.date:parse-time from) 1)))
 		(to-time (if (or (not to) (equal to "")) (end-of-today)
 					 (+ +one-day+ (net.telent.date:parse-time to) 1))))
-	(db-single "select count(*) from matches where date between ? and ?"
-			   from-time to-time)))
+	(db-single "select count(*) from matches where date between ? and ? limit ?"
+			   from-time to-time (lk 'filter-limit *config*))))
 
 (defun filter-matches (from to type deck against notes outcome)
   (let ((from-time (if (or (not from) (equal from "")) 0

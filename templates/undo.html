@@ -18,6 +18,7 @@
 			<div class="main">
 				<div class="row">
 					<div class="col-md-12">
+						<!-- TMPL_IF match-id -->
 						<div class="alert alert-success undo-alert" role="alert">
 							Removed match
 							<strong>#<!-- TMPL_VAR match-id --></strong>
@@ -29,6 +30,15 @@
 								</span>
 							</a>
 						</div>
+						<!-- TMPL_ELSE -->
+						<div class="alert alert-info undo-alert" role="alert">
+							No match to remove
+							<a href="./" class="btn-xs btn-default" id="filter_reset">
+								<span class="glyphicon glyphicon-ok">
+								</span>
+							</a>
+						</div>
+						<!-- /TMPL_IF -->
 					</div>
 				</div>
 			</div>
